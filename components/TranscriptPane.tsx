@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Download, Maximize2, Minimize2 } from "lucide-react";
 
 type TranscriptLine = {
   id: number;
@@ -13,24 +15,59 @@ type TranscriptLine = {
 const transcriptData: TranscriptLine[] = [
   {
     id: 1,
-    start: 0,
-    end: 4,
-    speaker: "SYSTEM",
-    text: "Audio connection established.",
+    start: 2.07,
+    end: 5.37,
+    speaker: "NARRATOR",
+    text: "Leo jumped up and down many times.",
   },
   {
     id: 2,
-    start: 4.5,
-    end: 8,
+    start: 6.03,
+    end: 8.6,
     speaker: "LEO",
-    text: "Vesper, you reading this? The rain is shorting out the neon down here.",
+    text: "Vesper, what are you doing?",
   },
   {
     id: 3,
-    start: 8.5,
-    end: 12,
+    start: 9.3,
+    end: 12.72,
     speaker: "VESPER",
-    text: "Signal is degraded, Leo. Rerouting through the localized mesh.",
+    text: "Nothing, Leo. Whatever I want.",
+  },
+  {
+    id: 4,
+    start: 14.0,
+    end: 16.36,
+    speaker: "JULIAN",
+    text: "Just drink the coffee, kid.",
+  },
+  {
+    id: 5,
+    start: 18.66,
+    end: 21.05,
+    speaker: "LEO",
+    text: "Vesper, come over here.",
+  },
+  {
+    id: 6,
+    start: 21.96,
+    end: 24.96,
+    speaker: "VESPER",
+    text: "No, thanks, Leo. I'm good.",
+  },
+  {
+    id: 7,
+    start: 27.3,
+    end: 30.52,
+    speaker: "JULIAN",
+    text: "Leo, why haven't you drank the coffee yet?",
+  },
+  {
+    id: 8,
+    start: 32.34,
+    end: 35.31,
+    speaker: "THE OWNER",
+    text: "Leo, I'm going to keep your bonus.",
   },
 ];
 
@@ -41,24 +78,68 @@ type TranscriptPaneProps = {
 export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    if (activeRef.current) {
-      activeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (activeRef.current && containerRef.current) {
+      const container = containerRef.current;
+      const active = activeRef.current;
+
+      const scrollPos =
+        active.offsetTop - container.clientHeight / 2 + active.clientHeight / 2;
+
+      container.scrollTo({ top: scrollPos, behavior: "smooth" });
     }
   }, [currentTime]);
 
-  return (
-    <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
-      <div className="shrink-0 px-5 py-3 border-b border-white/5">
+  const downloadTranscript = () => {
+    const content = transcriptData
+      .map(
+        (line) =>
+          `[${line.start.toFixed(1)}-${line.end.toFixed(1)}] ${line.speaker}: ${line.text}`
+      )
+      .join("\n");
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "static-and-sync-transcript.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const paneContent = (
+    <>
+      <div className="relative flex items-center justify-center px-5 py-3 border-b border-white/5 shrink-0">
         <p className="ui-label text-[9px] tracking-[0.3em] text-accent-cyan/70 uppercase">
           /// TRANSCRIPT STREAM ///
         </p>
+        <div className="absolute right-5 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={downloadTranscript}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Download transcript"
+          >
+            <Download size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label={isExpanded ? "Collapse transcript pane" : "Expand transcript pane"}
+          >
+            {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
+        </div>
       </div>
 
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto px-5 py-4 space-y-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#64FFDA]/20 [scrollbar-width:thin] [scrollbar-color:rgba(100,255,218,0.2)_transparent]"
+        className="relative flex-1 overflow-y-auto px-5 py-4 space-y-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#64FFDA]/20 [scrollbar-width:thin] [scrollbar-color:rgba(100,255,218,0.2)_transparent]"
       >
         {transcriptData.map((line) => {
           const isActive = currentTime >= line.start && currentTime <= line.end;
@@ -81,6 +162,27 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
           );
         })}
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {!isExpanded ? (
+        <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
+          {paneContent}
+        </div>
+      ) : (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-12 bg-[#0A192F]/80 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="w-full max-w-4xl h-[80vh] bg-[#112240]/40 backdrop-blur-md border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl shadow-black/40"
+          >
+            {paneContent}
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 }

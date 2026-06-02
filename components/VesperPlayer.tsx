@@ -14,11 +14,11 @@ type Episode = {
 
 const episodeList: Episode[] = [
   {
-    id: "s01e01",
+    id: "test01",
     season: 1,
     episodeNumber: 1,
-    title: "The Arroyo Shift",
-    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: "Sync Test",
+    audioUrl: "/Static & Sync - S01E01 - Test Audio for Transcripts.mp3",
   },
   {
     id: "s01e02",
