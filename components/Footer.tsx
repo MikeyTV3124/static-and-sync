@@ -64,7 +64,7 @@ export default function Footer() {
 
         <div className="border-t border-white/5 pt-6 mt-6 text-center">
           <p className="text-[10px] text-text-secondary/70 tracking-wide">
-            © 2026 STATIC & SYNC // ALL RIGHTS RESERVED.
+            © 2026 STATIC & SYNC // ALL RIGHTS RESERVED..
           </p>
         </div>
       </div>
