@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Download, Maximize2, Minimize2 } from "lucide-react";
+import { Download, Maximize2, Minimize2, Type } from "lucide-react";
 
 type TranscriptLine = {
   id: number;
@@ -79,6 +79,8 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [sizeIndex, setSizeIndex] = useState(0);
+  const textSizes = ["text-sm", "text-base", "text-lg"];
 
   useEffect(() => {
     if (activeRef.current && containerRef.current) {
@@ -120,6 +122,14 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
         <div className="absolute right-5 flex items-center gap-3">
           <button
             type="button"
+            onClick={() => setSizeIndex((prev) => (prev + 1) % textSizes.length)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Change transcript text size"
+          >
+            <Type size={18} />
+          </button>
+          <button
+            type="button"
             onClick={downloadTranscript}
             className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
             aria-label="Download transcript"
@@ -139,7 +149,7 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
 
       <div
         ref={containerRef}
-        className="relative flex-1 overflow-y-auto px-5 py-4 space-y-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#64FFDA]/20 [scrollbar-width:thin] [scrollbar-color:rgba(100,255,218,0.2)_transparent]"
+        className="relative flex-1 overflow-y-auto px-5 py-10 space-y-3 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         {transcriptData.map((line) => {
           const isActive = currentTime >= line.start && currentTime <= line.end;
@@ -157,7 +167,7 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
               <p className="ui-label text-[9px] tracking-[0.2em] uppercase mb-1">
                 {line.speaker}
               </p>
-              <p className="text-sm leading-relaxed">{line.text}</p>
+              <p className={`leading-relaxed ${textSizes[sizeIndex]}`}>{line.text}</p>
             </div>
           );
         })}

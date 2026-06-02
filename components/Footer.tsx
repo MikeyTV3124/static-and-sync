@@ -1,5 +1,8 @@
+"use client";
+
 import {
   FaInstagram,
+  FaPatreon,
   FaRedditAlien,
   FaTiktok,
   FaTwitter,
@@ -28,9 +31,18 @@ const socialLinks: { label: string; icon: IconType; href: string }[] = [
     icon: FaRedditAlien,
     href: "https://reddit.com/r/StaticAndSync",
   },
+  {
+    label: "Patreon",
+    icon: FaPatreon,
+    href: "https://www.patreon.com/c/StaticSyncPod",
+  },
 ];
 
-export default function Footer() {
+type FooterProps = {
+  onAccessPress: () => void;
+};
+
+export default function Footer({ onAccessPress }: FooterProps) {
   return (
     <footer className="w-full mt-20 pt-24 pb-8 bg-[#050d18]/80">
       <div className="max-w-6xl mx-auto px-6 flex flex-col">
@@ -50,12 +62,22 @@ export default function Footer() {
             ))}
           </div>
 
-          <a
-            href="#"
+          <button
+            type="button"
+            onClick={() => {
+              onAccessPress();
+              const moduleNavTop =
+                document.querySelector(".module-nav")?.getBoundingClientRect().top;
+              if (moduleNavTop === undefined) return;
+              window.scrollTo({
+                top: moduleNavTop + window.scrollY - 100,
+                behavior: "smooth",
+              });
+            }}
             className="ui-label text-[9px] tracking-[0.2em] text-text-secondary uppercase transition-colors hover:text-accent-cyan hover:[text-shadow:0_0_12px_rgba(100,255,218,0.45)]"
           >
             [ ACCESS PRESS KIT ]
-          </a>
+          </button>
         </div>
 
         <div className="flex justify-center mb-6">

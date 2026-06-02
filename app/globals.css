@@ -26,3 +26,12 @@ h1, h2, h3, .ui-label {
   font-family: var(--font-michroma);
   letter-spacing: 0.05em;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

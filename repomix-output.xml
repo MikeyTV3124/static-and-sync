@@ -49,7 +49,9 @@ app/layout.tsx
 app/page.tsx
 CLAUDE.md
 components/Footer.tsx
+components/PersonnelFiles.tsx
 components/PersonnelGrid.tsx
+components/PressArchive.tsx
 components/SubscribeBadges.tsx
 components/TranscriptPane.tsx
 components/VesperPlayer.tsx
@@ -59,8 +61,15 @@ package.json
 postcss.config.mjs
 public/file.svg
 public/globe.svg
-public/Neonhead.mp3
 public/next.svg
+public/Static & Sync - S01E01 - Test Audio for Transcripts.mp3
+public/Static-and-Sync-Press-Kit.7z
+public/Static-and-Sync-Press-Kit/AudioFilestoInclude.txt
+public/Static-and-Sync-Press-Kit/Static and Sync Press Kit.pdf
+public/Static-and-Sync-Press-Kit/StaticandSyncBanner.JPG
+public/Static-and-Sync-Press-Kit/StaticandSyncBanner2.JPG
+public/Static-and-Sync-Press-Kit/StaticandSyncMainBanner.png
+public/Static-and-Sync-Press-Kit/StaticandSyncWebFriendly.JPG
 public/vercel.svg
 public/window.svg
 README.md
@@ -69,6 +78,147 @@ tsconfig.json
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="components/PersonnelFiles.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+import PersonnelGrid from "@/components/PersonnelGrid";
+
+export default function PersonnelFiles() {
+  return (
+    <section className="w-full space-y-10">
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-white/10" />
+        <span className="ui-label text-[9px] tracking-[0.35em] text-text-secondary/60 uppercase whitespace-nowrap">
+          /// PERSONNEL FILES ///
+        </span>
+        <div className="flex-1 h-px bg-white/10" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7 }}
+      >
+        <PersonnelGrid />
+      </motion.div>
+    </section>
+  );
+}
+</file>
+
+<file path="components/PressArchive.tsx">
+type AssetButtonProps = {
+  label: string;
+  href: string;
+};
+
+function AssetButton({ label, href }: AssetButtonProps) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        ui-label text-[10px] tracking-[0.2em] uppercase
+        px-4 py-3 transition-all duration-200
+        border border-accent-cyan/30 bg-transparent text-accent-cyan/60
+        hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
+      "
+    >
+      {label}
+    </a>
+  );
+}
+
+export default function PressArchive() {
+  return (
+    <div className="space-y-6">
+      <div className="p-8 border border-white/10 rounded-2xl bg-[#112240]/40 backdrop-blur-md">
+        <h2 className="text-xl font-mono text-accent-cyan mb-6">
+          /// ARCHIVE: PROJECT_OVERVIEW ///
+        </h2>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="ui-label text-xs text-text-secondary uppercase mb-2">
+              // LOGLINE
+            </h3>
+            <p className="text-white italic">
+              "Static is the noise of the city; Sync is the connection keeping him alive."
+            </p>
+          </div>
+
+          <div>
+            <h3 className="ui-label text-xs text-text-secondary uppercase mb-2">
+              // SYNOPSIS
+            </h3>
+            <p className="text-text-secondary leading-relaxed text-sm">
+              In the rain-slicked sprawl of Arroyo, Leo&apos;s existence is measured in
+              lukewarm coffee and the quiet hum of a graveyard shift. His solitude is
+              broken when an anonymous data-chit is left at the counter, a gift from a
+              city legend who knows exactly what the machine needs to survive. Inside is
+              Vesper.OS, an intelligence desperate to understand not the code of the city,
+              but the pulse of the human heart. Static &amp; Sync is a slow-burn audio drama
+              about the collision of two strangers, one made of meat and bone, the other
+              of logic and light, and the fragile, quiet intimacy they build in a world
+              built to keep them apart.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-surface/50 p-6 rounded-xl border border-white/5 backdrop-blur-md">
+          <h3 className="text-accent-cyan ui-label text-sm tracking-[0.2em]">
+            /// ASSET_DOWNLOADS ///
+          </h3>
+          <div className="flex flex-col gap-3 mt-4">
+            <AssetButton
+              label="DOWNLOAD FULL PRESS KIT (.7Z)"
+              href="/Static-and-Sync-Press-Kit.7z"
+            />
+            <AssetButton
+              label="PRESS KIT (PDF)"
+              href="/Static-and-Sync-Press-Kit/Static and Sync Press Kit.pdf"
+            />
+            <AssetButton
+              label="MAIN BANNER (PNG)"
+              href="/Static-and-Sync-Press-Kit/StaticandSyncMainBanner.png"
+            />
+            <AssetButton
+              label="WEB BANNER (JPG)"
+              href="/Static-and-Sync-Press-Kit/StaticandSyncWebFriendly.JPG"
+            />
+            <AssetButton
+              label="ALTERNATE BANNER (JPG)"
+              href="/Static-and-Sync-Press-Kit/StaticandSyncBanner2.JPG"
+            />
+          </div>
+        </div>
+
+        <div className="bg-surface/50 p-6 rounded-xl border border-white/5 backdrop-blur-md">
+          <h3 className="text-accent-cyan ui-label text-sm tracking-[0.2em]">
+            /// SONIC_SAMPLES ///
+          </h3>
+          <div className="flex flex-col gap-3 mt-4">
+            <AssetButton
+              label="S01E01 TRANSCRIPT TEST AUDIO (MP3)"
+              href="/Static & Sync - S01E01 - Test Audio for Transcripts.mp3"
+            />
+            <p className="text-sm text-text-secondary/80 leading-relaxed">
+              Use this stream-safe test file to validate transcript timing and sync
+              behavior.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
 
 <file path=".cursorrules">
 # Role
@@ -105,80 +255,16 @@ This site must NOT look like a generic podcast template or a cliché glowing neo
 - Write modern, functional TypeScript.
 </file>
 
-<file path="components/Footer.tsx">
-import {
-  FaInstagram,
-  FaRedditAlien,
-  FaTiktok,
-  FaTwitter,
-} from "react-icons/fa";
-import type { IconType } from "react-icons";
-import SubscribeBadges from "@/components/SubscribeBadges";
+<file path="AGENTS.md">
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
 
-const socialLinks: { label: string; icon: IconType; href: string }[] = [
-  {
-    label: "Twitter",
-    icon: FaTwitter,
-    href: "https://twitter.com/StaticSyncPod",
-  },
-  {
-    label: "Instagram",
-    icon: FaInstagram,
-    href: "https://instagram.com/StaticSyncPod",
-  },
-  {
-    label: "TikTok",
-    icon: FaTiktok,
-    href: "https://tiktok.com/@StaticSyncPod",
-  },
-  {
-    label: "Reddit",
-    icon: FaRedditAlien,
-    href: "https://reddit.com/r/StaticAndSync",
-  },
-];
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
+</file>
 
-export default function Footer() {
-  return (
-    <footer className="w-full mt-20 pt-24 pb-8 bg-[#050d18]/80">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8">
-          <div className="flex items-center gap-3">
-            {socialLinks.map(({ label, icon: Icon, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 bg-white/5 text-text-secondary opacity-70 transition-opacity hover:opacity-100"
-              >
-                <Icon size={16} aria-hidden />
-              </a>
-            ))}
-          </div>
-
-          <a
-            href="#"
-            className="ui-label text-[9px] tracking-[0.2em] text-text-secondary uppercase transition-colors hover:text-accent-cyan hover:[text-shadow:0_0_12px_rgba(100,255,218,0.45)]"
-          >
-            [ ACCESS PRESS KIT ]
-          </a>
-        </div>
-
-        <div className="flex justify-center mb-6">
-          <SubscribeBadges />
-        </div>
-
-        <div className="border-t border-white/5 pt-6 mt-6 text-center">
-          <p className="text-[10px] text-text-secondary/70 tracking-wide">
-            © 2026 STATIC & SYNC // ALL RIGHTS RESERVED.
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
-}
+<file path="CLAUDE.md">
+@AGENTS.md
 </file>
 
 <file path="components/PersonnelGrid.tsx">
@@ -509,10 +595,440 @@ export default function SubscribeBadges() {
 }
 </file>
 
+<file path="eslint.config.mjs">
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
+
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  // Override default ignores of eslint-config-next.
+  globalIgnores([
+    // Default ignores of eslint-config-next:
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+  ]),
+]);
+
+export default eslintConfig;
+</file>
+
+<file path="next.config.ts">
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+</file>
+
+<file path="postcss.config.mjs">
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+</file>
+
+<file path="public/file.svg">
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+</file>
+
+<file path="public/globe.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="public/next.svg">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+</file>
+
+<file path="public/Static-and-Sync-Press-Kit/AudioFilestoInclude.txt">
+The Audio (Your Secret Weapon)
+As a professional audio engineer, your strongest marketing 
+asset isn't a folder of graphics—it is the immersive, 
+polished sonic landscape of Arroyo. Critics who listen to 
+audio dramas will immediately recognize high-tier mixing and 
+sound design.
+
+The Trailer: A 60-to-90-second .mp3 teaser of the show.
+
+The Soundscape (Optional): A 30-second clip highlighting the 
+ambient rain, the diner noise, and Vesper's UI interactions, 
+allowing the audio to speak for itself.
+</file>
+
+<file path="public/vercel.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+</file>
+
+<file path="public/window.svg">
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="README.md">
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": ["node_modules"]
+}
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.vercel
+</file>
+
+<file path="app/globals.css">
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #0A192F;
+  --color-surface: #112240;
+  --color-accent-cyan: #64FFDA;
+  --color-accent-violet: #B392F0;
+  --color-text-primary: #CCD6F6;
+  --color-text-secondary: #8892B0;
+  
+  --font-michroma: var(--font-michroma);
+  --font-mono: var(--font-jetbrains);
+}
+
+:root {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+body {
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .ui-label {
+  font-family: var(--font-michroma);
+  letter-spacing: 0.05em;
+}
+</file>
+
+<file path="app/layout.tsx">
+import type { Metadata } from "next";
+import { Michroma, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+
+const michroma = Michroma({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-michroma",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+});
+
+export const metadata: Metadata = {
+  title: "Static & Sync | A Cyberpunk Audio Drama",
+  description: "Static is the noise of the city; Sync is the connection keeping him alive.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" className={`${michroma.variable} ${jetbrains.variable} h-full antialiased`}>
+      <body className="bg-[#0A192F] text-[#CCD6F6] min-h-full font-mono">
+        {children}
+      </body>
+    </html>
+  );
+}
+</file>
+
+<file path="app/page.tsx">
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Radio } from "lucide-react";
+import {
+  FaInstagram,
+  FaPatreon,
+  FaRedditAlien,
+  FaTiktok,
+  FaTwitter,
+} from "react-icons/fa";
+import VesperPlayer from "@/components/VesperPlayer";
+import TranscriptPane from "@/components/TranscriptPane";
+import PersonnelFiles from "@/components/PersonnelFiles";
+import PressArchive from "@/components/PressArchive";
+import SubscribeBadges from "@/components/SubscribeBadges";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+  const [globalTime, setGlobalTime] = useState(0);
+  const [currentView, setCurrentView] = useState("home");
+
+  const topSocialLinks = [
+    {
+      label: "Twitter",
+      href: "https://twitter.com/StaticSyncPod",
+      Icon: FaTwitter,
+    },
+    {
+      label: "Instagram",
+      href: "https://instagram.com/StaticSyncPod",
+      Icon: FaInstagram,
+    },
+    {
+      label: "TikTok",
+      href: "https://tiktok.com/@StaticSyncPod",
+      Icon: FaTiktok,
+    },
+    {
+      label: "Reddit",
+      href: "https://reddit.com/r/StaticAndSync",
+      Icon: FaRedditAlien,
+    },
+    {
+      label: "Patreon",
+      href: "https://www.patreon.com/c/StaticSyncPod",
+      Icon: FaPatreon,
+    },
+  ];
+
+  return (
+    <main className="relative flex min-h-screen flex-col items-center p-6 md:p-24">
+      {/* Intimate Glow Effect */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <header className="absolute top-0 right-0 w-full p-6 flex justify-end gap-4 z-50">
+        {topSocialLinks.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="text-text-secondary/50 hover:text-accent-cyan transition-colors"
+          >
+            <Icon size={20} aria-hidden />
+          </a>
+        ))}
+      </header>
+
+      <div className="z-10 w-full max-w-6xl flex flex-col items-center text-center space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-4 max-w-3xl"
+        >
+          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
+            <Radio size={20} className="animate-pulse" />
+            <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+            STATIC & SYNC
+          </h1>
+
+          <p className="text-accent-violet ui-label text-sm md:text-base italic">
+            "Static is the crushing noise of the city; Sync is the connection keeping him alive."
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="bg-surface/50 border border-white/10 p-8 rounded-2xl backdrop-blur-md max-w-2xl w-full"
+        >
+          <p className="text-text-secondary leading-relaxed">
+            In the rain-slicked sprawl of Arroyo, a reclusive diner cook finds his world
+            inextricably bound to a rogue AI in this grounded, intimate cyberpunk drama.
+          </p>
+        </motion.div>
+
+        <div className="w-full pb-4">
+          <SubscribeBadges />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.8 }}
+          className="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-10 items-stretch justify-center"
+        >
+          <div className="w-full lg:w-auto flex justify-center">
+            <VesperPlayer onTimeUpdate={setGlobalTime} />
+          </div>
+          <div className="w-full lg:flex-1 max-w-2xl mx-auto">
+            <TranscriptPane currentTime={globalTime} />
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="z-10 w-full max-w-6xl mt-20">
+        <div className="module-nav flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => setCurrentView("home")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "home" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PERSONNEL
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView("press")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "press" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PRESS
+          </button>
+        </div>
+
+        <div className="mt-4 h-[600px] overflow-y-auto">
+          {currentView === "home" ? <PersonnelFiles /> : <PressArchive />}
+        </div>
+      </div>
+
+      <Footer onAccessPress={() => setCurrentView("press")} />
+    </main>
+  );
+}
+</file>
+
 <file path="components/TranscriptPane.tsx">
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Download, Maximize2, Minimize2, Type } from "lucide-react";
 
 type TranscriptLine = {
   id: number;
@@ -525,24 +1041,59 @@ type TranscriptLine = {
 const transcriptData: TranscriptLine[] = [
   {
     id: 1,
-    start: 0,
-    end: 4,
-    speaker: "SYSTEM",
-    text: "Audio connection established.",
+    start: 2.07,
+    end: 5.37,
+    speaker: "NARRATOR",
+    text: "Leo jumped up and down many times.",
   },
   {
     id: 2,
-    start: 4.5,
-    end: 8,
+    start: 6.03,
+    end: 8.6,
     speaker: "LEO",
-    text: "Vesper, you reading this? The rain is shorting out the neon down here.",
+    text: "Vesper, what are you doing?",
   },
   {
     id: 3,
-    start: 8.5,
-    end: 12,
+    start: 9.3,
+    end: 12.72,
     speaker: "VESPER",
-    text: "Signal is degraded, Leo. Rerouting through the localized mesh.",
+    text: "Nothing, Leo. Whatever I want.",
+  },
+  {
+    id: 4,
+    start: 14.0,
+    end: 16.36,
+    speaker: "JULIAN",
+    text: "Just drink the coffee, kid.",
+  },
+  {
+    id: 5,
+    start: 18.66,
+    end: 21.05,
+    speaker: "LEO",
+    text: "Vesper, come over here.",
+  },
+  {
+    id: 6,
+    start: 21.96,
+    end: 24.96,
+    speaker: "VESPER",
+    text: "No, thanks, Leo. I'm good.",
+  },
+  {
+    id: 7,
+    start: 27.3,
+    end: 30.52,
+    speaker: "JULIAN",
+    text: "Leo, why haven't you drank the coffee yet?",
+  },
+  {
+    id: 8,
+    start: 32.34,
+    end: 35.31,
+    speaker: "THE OWNER",
+    text: "Leo, I'm going to keep your bonus.",
   },
 ];
 
@@ -553,24 +1104,78 @@ type TranscriptPaneProps = {
 export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [sizeIndex, setSizeIndex] = useState(0);
+  const textSizes = ["text-sm", "text-base", "text-lg"];
 
   useEffect(() => {
-    if (activeRef.current) {
-      activeRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (activeRef.current && containerRef.current) {
+      const container = containerRef.current;
+      const active = activeRef.current;
+
+      const scrollPos =
+        active.offsetTop - container.clientHeight / 2 + active.clientHeight / 2;
+
+      container.scrollTo({ top: scrollPos, behavior: "smooth" });
     }
   }, [currentTime]);
 
-  return (
-    <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
-      <div className="shrink-0 px-5 py-3 border-b border-white/5">
+  const downloadTranscript = () => {
+    const content = transcriptData
+      .map(
+        (line) =>
+          `[${line.start.toFixed(1)}-${line.end.toFixed(1)}] ${line.speaker}: ${line.text}`
+      )
+      .join("\n");
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "static-and-sync-transcript.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const paneContent = (
+    <>
+      <div className="relative flex items-center justify-center px-5 py-3 border-b border-white/5 shrink-0">
         <p className="ui-label text-[9px] tracking-[0.3em] text-accent-cyan/70 uppercase">
           /// TRANSCRIPT STREAM ///
         </p>
+        <div className="absolute right-5 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setSizeIndex((prev) => (prev + 1) % textSizes.length)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Change transcript text size"
+          >
+            <Type size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={downloadTranscript}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Download transcript"
+          >
+            <Download size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label={isExpanded ? "Collapse transcript pane" : "Expand transcript pane"}
+          >
+            {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
+        </div>
       </div>
 
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto px-5 py-4 space-y-3 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#64FFDA]/20 [scrollbar-width:thin] [scrollbar-color:rgba(100,255,218,0.2)_transparent]"
+        className="relative flex-1 overflow-y-auto px-5 py-10 space-y-3 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         {transcriptData.map((line) => {
           const isActive = currentTime >= line.start && currentTime <= line.end;
@@ -588,12 +1193,33 @@ export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps)
               <p className="ui-label text-[9px] tracking-[0.2em] uppercase mb-1">
                 {line.speaker}
               </p>
-              <p className="text-sm leading-relaxed">{line.text}</p>
+              <p className={`leading-relaxed ${textSizes[sizeIndex]}`}>{line.text}</p>
             </div>
           );
         })}
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {!isExpanded ? (
+        <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
+          {paneContent}
+        </div>
+      ) : (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-12 bg-[#0A192F]/80 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="w-full max-w-4xl h-[80vh] bg-[#112240]/40 backdrop-blur-md border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl shadow-black/40"
+          >
+            {paneContent}
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 }
 </file>
@@ -615,11 +1241,11 @@ type Episode = {
 
 const episodeList: Episode[] = [
   {
-    id: "s01e01",
+    id: "test01",
     season: 1,
     episodeNumber: 1,
-    title: "The Arroyo Shift",
-    audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    title: "Sync Test",
+    audioUrl: "/Static & Sync - S01E01 - Test Audio for Transcripts.mp3",
   },
   {
     id: "s01e02",
@@ -1329,257 +1955,6 @@ export default function VesperPlayer({ onTimeUpdate }: VesperPlayerProps) {
 }
 </file>
 
-<file path=".gitignore">
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-</file>
-
-<file path="AGENTS.md">
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-</file>
-
-<file path="app/globals.css">
-@import "tailwindcss";
-
-@theme inline {
-  --color-background: #0A192F;
-  --color-surface: #112240;
-  --color-accent-cyan: #64FFDA;
-  --color-accent-violet: #B392F0;
-  --color-text-primary: #CCD6F6;
-  --color-text-secondary: #8892B0;
-  
-  --font-michroma: var(--font-michroma);
-  --font-mono: var(--font-jetbrains);
-}
-
-:root {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-}
-
-body {
-  font-family: var(--font-mono);
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, .ui-label {
-  font-family: var(--font-michroma);
-  letter-spacing: 0.05em;
-}
-</file>
-
-<file path="app/layout.tsx">
-import type { Metadata } from "next";
-import { Michroma, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-
-const michroma = Michroma({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-michroma",
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-});
-
-export const metadata: Metadata = {
-  title: "Static & Sync | A Cyberpunk Audio Drama",
-  description: "Static is the noise of the city; Sync is the connection keeping him alive.",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className={`${michroma.variable} ${jetbrains.variable} h-full antialiased`}>
-      <body className="bg-[#0A192F] text-[#CCD6F6] min-h-full font-mono">
-        {children}
-      </body>
-    </html>
-  );
-}
-</file>
-
-<file path="app/page.tsx">
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Radio } from "lucide-react";
-import VesperPlayer from "@/components/VesperPlayer";
-import TranscriptPane from "@/components/TranscriptPane";
-import PersonnelGrid from "@/components/PersonnelGrid";
-import SubscribeBadges from "@/components/SubscribeBadges";
-import Footer from "@/components/Footer";
-
-export default function Home() {
-  const [globalTime, setGlobalTime] = useState(0);
-
-  return (
-    <main className="flex min-h-screen flex-col items-center p-6 md:p-24">
-      {/* Intimate Glow Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="z-10 w-full max-w-6xl flex flex-col items-center text-center space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-4 max-w-3xl"
-        >
-          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
-            <Radio size={20} className="animate-pulse" />
-            <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
-          </div>
-
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
-            STATIC & SYNC
-          </h1>
-
-          <p className="text-accent-violet ui-label text-sm md:text-base italic">
-            "Static is the crushing noise of the city; Sync is the connection keeping him alive."
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="bg-surface/50 border border-white/10 p-8 rounded-2xl backdrop-blur-md max-w-2xl w-full"
-        >
-          <p className="text-text-secondary leading-relaxed">
-            In the rain-slicked sprawl of Arroyo, a reclusive diner cook finds his world
-            inextricably bound to a rogue AI in this grounded, intimate cyberpunk drama.
-          </p>
-        </motion.div>
-
-        <div className="w-full pb-4">
-          <SubscribeBadges />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8 }}
-          className="w-full flex flex-col lg:flex-row gap-6 lg:gap-8 items-stretch"
-        >
-          <div className="w-full lg:w-[60%] flex justify-center">
-            <VesperPlayer onTimeUpdate={setGlobalTime} />
-          </div>
-          <div className="w-full lg:w-[40%]">
-            <TranscriptPane currentTime={globalTime} />
-          </div>
-        </motion.div>
-      </div>
-
-      <div className="z-10 w-full max-w-6xl mt-20 space-y-10">
-        <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-white/10" />
-          <span className="ui-label text-[9px] tracking-[0.35em] text-text-secondary/60 uppercase whitespace-nowrap">
-            /// PERSONNEL FILES ///
-          </span>
-          <div className="flex-1 h-px bg-white/10" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7 }}
-        >
-          <PersonnelGrid />
-        </motion.div>
-      </div>
-
-      <Footer />
-    </main>
-  );
-}
-</file>
-
-<file path="CLAUDE.md">
-@AGENTS.md
-</file>
-
-<file path="eslint.config.mjs">
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
-
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-  ]),
-]);
-
-export default eslintConfig;
-</file>
-
-<file path="next.config.ts">
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
-</file>
-
 <file path="package.json">
 {
   "name": "static-and-sync",
@@ -1612,109 +1987,101 @@ export default nextConfig;
 }
 </file>
 
-<file path="postcss.config.mjs">
-const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
+<file path="components/Footer.tsx">
+"use client";
+
+import {
+  FaInstagram,
+  FaPatreon,
+  FaRedditAlien,
+  FaTiktok,
+  FaTwitter,
+} from "react-icons/fa";
+import type { IconType } from "react-icons";
+import SubscribeBadges from "@/components/SubscribeBadges";
+
+const socialLinks: { label: string; icon: IconType; href: string }[] = [
+  {
+    label: "Twitter",
+    icon: FaTwitter,
+    href: "https://twitter.com/StaticSyncPod",
   },
+  {
+    label: "Instagram",
+    icon: FaInstagram,
+    href: "https://instagram.com/StaticSyncPod",
+  },
+  {
+    label: "TikTok",
+    icon: FaTiktok,
+    href: "https://tiktok.com/@StaticSyncPod",
+  },
+  {
+    label: "Reddit",
+    icon: FaRedditAlien,
+    href: "https://reddit.com/r/StaticAndSync",
+  },
+  {
+    label: "Patreon",
+    icon: FaPatreon,
+    href: "https://www.patreon.com/c/StaticSyncPod",
+  },
+];
+
+type FooterProps = {
+  onAccessPress: () => void;
 };
 
-export default config;
-</file>
+export default function Footer({ onAccessPress }: FooterProps) {
+  return (
+    <footer className="w-full mt-20 pt-24 pb-8 bg-[#050d18]/80">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8">
+          <div className="flex items-center gap-3">
+            {socialLinks.map(({ label, icon: Icon, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 bg-white/5 text-text-secondary opacity-70 transition-opacity hover:opacity-100"
+              >
+                <Icon size={16} aria-hidden />
+              </a>
+            ))}
+          </div>
 
-<file path="public/file.svg">
-<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
-</file>
+          <button
+            type="button"
+            onClick={() => {
+              onAccessPress();
+              const moduleNavTop =
+                document.querySelector(".module-nav")?.getBoundingClientRect().top;
+              if (moduleNavTop === undefined) return;
+              window.scrollTo({
+                top: moduleNavTop + window.scrollY - 100,
+                behavior: "smooth",
+              });
+            }}
+            className="ui-label text-[9px] tracking-[0.2em] text-text-secondary uppercase transition-colors hover:text-accent-cyan hover:[text-shadow:0_0_12px_rgba(100,255,218,0.45)]"
+          >
+            [ ACCESS PRESS KIT ]
+          </button>
+        </div>
 
-<file path="public/globe.svg">
-<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
-</file>
+        <div className="flex justify-center mb-6">
+          <SubscribeBadges />
+        </div>
 
-<file path="public/next.svg">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
-</file>
-
-<file path="public/vercel.svg">
-<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
-</file>
-
-<file path="public/window.svg">
-<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
-</file>
-
-<file path="README.md">
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-</file>
-
-<file path="tsconfig.json">
-{
-  "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./*"]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
-  ],
-  "exclude": ["node_modules"]
+        <div className="border-t border-white/5 pt-6 mt-6 text-center">
+          <p className="text-[10px] text-text-secondary/70 tracking-wide">
+            © 2026 STATIC & SYNC // ALL RIGHTS RESERVED.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
 }
 </file>
 

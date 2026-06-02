@@ -3,15 +3,24 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Radio } from "lucide-react";
-import { FaInstagram, FaRedditAlien, FaTiktok, FaTwitter } from "react-icons/fa";
+import {
+  FaInstagram,
+  FaPatreon,
+  FaRedditAlien,
+  FaTiktok,
+  FaTwitter,
+} from "react-icons/fa";
 import VesperPlayer from "@/components/VesperPlayer";
 import TranscriptPane from "@/components/TranscriptPane";
-import PersonnelGrid from "@/components/PersonnelGrid";
+import PersonnelFiles from "@/components/PersonnelFiles";
+import PressArchive from "@/components/PressArchive";
 import SubscribeBadges from "@/components/SubscribeBadges";
+import ViewingPort from "@/components/ViewingPort";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   const [globalTime, setGlobalTime] = useState(0);
+  const [currentView, setCurrentView] = useState("home");
 
   const topSocialLinks = [
     {
@@ -33,6 +42,11 @@ export default function Home() {
       label: "Reddit",
       href: "https://reddit.com/r/StaticAndSync",
       Icon: FaRedditAlien,
+    },
+    {
+      label: "Patreon",
+      href: "https://www.patreon.com/c/StaticSyncPod",
+      Icon: FaPatreon,
     },
   ];
 
@@ -108,26 +122,42 @@ export default function Home() {
         </motion.div>
       </div>
 
-      <div className="z-10 w-full max-w-6xl mt-20 space-y-10">
-        <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-white/10" />
-          <span className="ui-label text-[9px] tracking-[0.35em] text-text-secondary/60 uppercase whitespace-nowrap">
-            /// PERSONNEL FILES ///
-          </span>
-          <div className="flex-1 h-px bg-white/10" />
+      <div className="z-10 w-full max-w-6xl mt-20">
+        <div className="module-nav flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => setCurrentView("home")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "home" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PERSONNEL
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView("press")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "press" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PRESS
+          </button>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7 }}
-        >
-          <PersonnelGrid />
-        </motion.div>
+        <div className="mt-4">
+          <ViewingPort>
+            {currentView === "home" ? <PersonnelFiles /> : <PressArchive />}
+          </ViewingPort>
+        </div>
       </div>
 
-      <Footer />
+      <Footer onAccessPress={() => setCurrentView("press")} />
     </main>
   );
 }
