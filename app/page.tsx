@@ -8,8 +8,8 @@ import {
   FaPatreon,
   FaRedditAlien,
   FaTiktok,
-  FaTwitter,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import VesperPlayer from "@/components/VesperPlayer";
 import TranscriptPane from "@/components/TranscriptPane";
 import PersonnelFiles from "@/components/PersonnelFiles";
@@ -24,9 +24,9 @@ export default function Home() {
 
   const topSocialLinks = [
     {
-      label: "Twitter",
+      label: "X",
       href: "https://twitter.com/StaticSyncPod",
-      Icon: FaTwitter,
+      Icon: FaXTwitter,
     },
     {
       label: "Instagram",

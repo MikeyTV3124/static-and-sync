@@ -5,15 +5,15 @@ import {
   FaPatreon,
   FaRedditAlien,
   FaTiktok,
-  FaTwitter,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import type { IconType } from "react-icons";
 import SubscribeBadges from "@/components/SubscribeBadges";
 
 const socialLinks: { label: string; icon: IconType; href: string }[] = [
   {
-    label: "Twitter",
-    icon: FaTwitter,
+    label: "X",
+    icon: FaXTwitter,
     href: "https://twitter.com/StaticSyncPod",
   },
   {
