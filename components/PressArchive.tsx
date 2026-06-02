@@ -1,3 +1,7 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
 type AssetButtonProps = {
   label: string;
   href: string;
@@ -18,6 +22,92 @@ function AssetButton({ label, href }: AssetButtonProps) {
     >
       {label}
     </a>
+  );
+}
+
+type EmbedButtonProps = {
+  audioUrl: string;
+  title: string;
+  buttonLabel?: string;
+};
+
+function EmbedButton({ audioUrl, title, buttonLabel = "GENERATE EMBED CODE" }: EmbedButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const embedCode = useMemo(() => {
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "";
+    const src = `${origin}/embed?url=${encodeURIComponent(audioUrl)}&title=${encodeURIComponent(title)}`;
+    return `<iframe src="${src}" width="100%" height="240" style="border:0; max-width:400px; overflow:hidden;" scrolling="no" allow="autoplay"></iframe>`;
+  }, [audioUrl, title]);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(embedCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="
+          ui-label text-[10px] tracking-[0.2em] uppercase
+          px-4 py-3 transition-all duration-200
+          border border-accent-cyan/30 bg-transparent text-accent-cyan/60
+          hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
+        "
+      >
+        {buttonLabel}
+      </button>
+
+      {isOpen ? (
+        <div className="fixed inset-0 z-50 bg-[#0A192F]/80 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-[#112240]/95 p-6 space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h3 className="ui-label text-xs tracking-[0.25em] text-accent-cyan uppercase">
+                  /// EMBED DEPLOYMENT ///
+                </h3>
+                <p className="text-sm text-text-secondary mt-1 truncate">{title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="ui-label text-[10px] text-text-secondary hover:text-white transition-colors"
+              >
+                CLOSE
+              </button>
+            </div>
+
+            <textarea
+              readOnly
+              value={embedCode}
+              className="w-full h-36 rounded-lg border border-white/10 bg-[#0A192F]/70 p-3 text-sm text-text-secondary font-mono resize-none focus:outline-none"
+            />
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={copyCode}
+                className="ui-label text-[10px] tracking-[0.2em] uppercase px-4 py-2 border border-accent-cyan/30 text-accent-cyan/70 hover:text-white hover:bg-accent-cyan/10 hover:border-accent-cyan transition-colors"
+              >
+                {copied ? "COPIED" : "COPY CODE"}
+              </button>
+              <p className="text-xs text-text-secondary/80">
+                Paste into any blog or press page to render the player.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -91,15 +181,43 @@ export default function PressArchive() {
           <h3 className="text-accent-cyan ui-label text-sm tracking-[0.2em]">
             /// SONIC_SAMPLES ///
           </h3>
-          <div className="flex flex-col gap-3 mt-4">
-            <AssetButton
-              label="S01E01 TRANSCRIPT TEST AUDIO (MP3)"
-              href="/Static & Sync - S01E01 - Test Audio for Transcripts.mp3"
-            />
-            <p className="text-sm text-text-secondary/80 leading-relaxed">
-              Use this stream-safe test file to validate transcript timing and sync
-              behavior.
-            </p>
+          <p className="text-sm text-text-secondary/80 leading-relaxed mt-4">
+            Curated players for press and blog embeds. Each button generates an iframe
+            snippet locked to that specific track.
+          </p>
+          <div className="flex flex-col gap-6 mt-4">
+            <div className="space-y-3 pb-6 border-b border-white/5">
+              <h4 className="ui-label text-[10px] tracking-[0.2em] text-text-primary uppercase">
+                // OFFICIAL TRAILER
+              </h4>
+              <p className="text-sm text-text-secondary/80 leading-relaxed">
+                Short-form hook for listings, festival pages, and social proof blocks.
+              </p>
+              <EmbedButton
+                audioUrl="/trailer.mp3"
+                title="Static & Sync — Official Trailer"
+                buttonLabel="EMBED — OFFICIAL TRAILER"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="ui-label text-[10px] tracking-[0.2em] text-text-primary uppercase">
+                // S01E01 PREMIERE
+              </h4>
+              <p className="text-sm text-text-secondary/80 leading-relaxed">
+                Full premiere episode for reviewers validating tone, pacing, and
+                transcript sync on long-form embeds.
+              </p>
+              <EmbedButton
+                audioUrl="/Static & Sync - S01E01 - Test Audio for Transcripts.mp3"
+                title="Static & Sync — S01E01 Premiere"
+                buttonLabel="EMBED — S01E01 PREMIERE"
+              />
+              <AssetButton
+                label="DOWNLOAD S01E01 (MP3)"
+                href="/Static & Sync - S01E01 - Test Audio for Transcripts.mp3"
+              />
+            </div>
           </div>
         </div>
       </div>

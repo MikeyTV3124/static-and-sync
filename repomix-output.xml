@@ -43,12 +43,15 @@ The content is organized as follows:
 .cursorrules
 .gitignore
 AGENTS.md
+app/embed-test/page.tsx
+app/embed/page.tsx
 app/favicon.ico
 app/globals.css
 app/layout.tsx
 app/page.tsx
 CLAUDE.md
 components/DetailView.tsx
+components/EmbeddablePlayer.tsx
 components/Footer.tsx
 components/PersonnelFiles.tsx
 components/PersonnelGrid.tsx
@@ -82,6 +85,163 @@ tsconfig.json
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="app/embed-test/page.tsx">
+export default function EmbedTestPage() {
+  return (
+    <main className="min-h-screen bg-[#0A192F] p-8 text-[#CCD6F6]">
+      <h1 className="ui-label text-lg tracking-[0.2em] uppercase mb-6">
+        Embed Preview
+      </h1>
+
+      <iframe
+        src="http://localhost:3000/embed?url=%2FStatic%20%26%20Sync%20-%20S01E01%20-%20Test%20Audio%20for%20Transcripts.mp3&title=Static%20%26%20Sync%20-%20S01E01%20-%20Test%20Audio%20for%20Transcripts"
+        width="400px"
+        height="250px"
+        className="border border-white/10 rounded-lg bg-[#112240]"
+      />
+    </main>
+  );
+}
+</file>
+
+<file path="app/embed/page.tsx">
+"use client";
+
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import EmbeddablePlayer from "@/components/EmbeddablePlayer";
+
+function EmbedPlayerContent() {
+  const params = useSearchParams();
+  const audioUrl =
+    params.get("url") ??
+    "/Static & Sync - S01E01 - Test Audio for Transcripts.mp3";
+  const title = params.get("title") ?? "Static & Sync Embed";
+
+  return <EmbeddablePlayer audioUrl={audioUrl} title={title} />;
+}
+
+export default function EmbedPage() {
+  return (
+    <main className="min-h-screen bg-[#0A192F] p-4 flex items-center justify-center">
+      <Suspense fallback={<div className="text-text-secondary">Loading embed...</div>}>
+        <EmbedPlayerContent />
+      </Suspense>
+    </main>
+  );
+}
+</file>
+
+<file path="components/EmbeddablePlayer.tsx">
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Pause, Play } from "lucide-react";
+
+type EmbeddablePlayerProps = {
+  audioUrl: string;
+  title: string;
+};
+
+function formatTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return "00:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+export default function EmbeddablePlayer({ audioUrl, title }: EmbeddablePlayerProps) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
+
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    audio.addEventListener("ended", onEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, []);
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      return;
+    }
+
+    try {
+      await audio.play();
+    } catch {
+      setIsPlaying(false);
+    }
+  };
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return (
+    <div className="w-full max-w-sm bg-[#112240]/80 backdrop-blur-md border border-[#64FFDA]/10 rounded-2xl shadow-lg shadow-[#64FFDA]/5 p-5 space-y-4">
+      <audio ref={audioRef} src={audioUrl} preload="metadata" />
+
+      <p className="ui-label text-[10px] tracking-[0.25em] text-accent-cyan uppercase [text-shadow:0_0_14px_rgba(100,255,218,0.45)]">
+        SYNC ESTABLISHED // VESPER.OS
+      </p>
+
+      <div className="space-y-1 text-left">
+        <p className="ui-label text-xs text-text-primary tracking-wide">{title}</p>
+      </div>
+
+      <div className="space-y-1.5">
+        <div className="relative w-full h-2 rounded-sm bg-white/10 overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 h-full bg-[#64FFDA] transition-[width] duration-150 ease-linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <div className="flex justify-between ui-label text-[9px] text-text-secondary tabular-nums">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+
+      <div className="flex justify-center pt-1">
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="flex items-center justify-center w-12 h-12 rounded-full bg-[#64FFDA]/10 border border-[#64FFDA]/30 text-accent-cyan hover:bg-[#64FFDA]/20 hover:border-[#64FFDA]/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
+          aria-label={isPlaying ? "Pause" : "Play"}
+        >
+          {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="ml-0.5" />}
+        </button>
+      </div>
+    </div>
+  );
+}
+</file>
 
 <file path=".cursorrules">
 # Role
@@ -130,136 +290,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 @AGENTS.md
 </file>
 
-<file path="components/DetailView.tsx">
+<file path="components/PressArchive.tsx">
 "use client";
 
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 
-type DetailViewProps = {
-  data: any;
-  onBack: () => void;
-  type: "member" | "character";
-};
-
-export default function DetailView({ data, onBack, type }: DetailViewProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="space-y-6"
-    >
-      <button
-        type="button"
-        onClick={onBack}
-        className="
-          sticky top-0 z-10
-          bg-[#0A192F]/80 backdrop-blur-md
-          ui-label text-[10px] tracking-[0.2em] uppercase
-          px-4 py-2 transition-all duration-200
-          border border-accent-cyan/30 text-accent-cyan/60
-          hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
-        "
-      >
-        [ &lt; BACK TO DATABASE ]
-      </button>
-
-      <div className="grid grid-cols-1 lg:grid-cols-5 items-start gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
-        <div className="lg:col-span-2 sticky top-24">
-          <div className="relative w-full aspect-[3/4] rounded-xl border border-white/10 bg-white/5 overflow-hidden">
-            {data.imageUrl ? (
-              <img
-                src={data.imageUrl}
-                alt={data.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <>
-                <div className="absolute inset-0 opacity-30 bg-[linear-gradient(0deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent)] bg-[length:36px_36px]" />
-                <div className="absolute inset-0 flex items-center justify-center text-text-secondary/60 ui-label text-xs tracking-[0.2em] uppercase">
-                  Portrait Pending
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="lg:col-span-3 space-y-5 text-left">
-          <div className="space-y-2">
-            <h2 className="ui-label text-2xl text-text-primary">{data.name}</h2>
-            <p className="ui-label text-xs tracking-[0.2em] uppercase text-accent-cyan">
-              {data.role}
-            </p>
-            {type === "character" && data.actor ? (
-              <p className="text-xs italic text-text-secondary/80">{data.actor}</p>
-            ) : null}
-          </div>
-
-          <div>
-            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
-              // BIOGRAPHIC ENTRY
-            </h3>
-            <p className="text-sm text-text-secondary leading-relaxed">{data.bio}</p>
-          </div>
-
-          <div>
-            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
-              // PERSONAL CLEARANCE
-            </h3>
-            {Array.isArray(data.socials) && data.socials.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {data.socials.map((social: { label: string; url: string }) => (
-                  <a
-                    key={`${data.name}-${social.label}`}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ui-label text-[9px] tracking-[0.15em] uppercase px-3 py-1.5 border border-accent-cyan/30 bg-transparent text-accent-cyan/70 transition-colors hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white"
-                  >
-                    {social.label}
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
-            )}
-          </div>
-
-          <div>
-            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
-              // EXTENDED DOSSIER
-            </h3>
-            {data.extendedBio ? (
-              <p className="text-sm text-text-secondary leading-relaxed">{data.extendedBio}</p>
-            ) : (
-              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-                Profile Type
-              </p>
-              <p className="text-sm text-text-primary mt-1">
-                {type === "member" ? "Production Team" : "Character Dossier"}
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-                Status
-              </p>
-              <p className="text-sm text-text-primary mt-1">Active Record</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-</file>
-
-<file path="components/PressArchive.tsx">
 type AssetButtonProps = {
   label: string;
   href: string;
@@ -280,6 +315,88 @@ function AssetButton({ label, href }: AssetButtonProps) {
     >
       {label}
     </a>
+  );
+}
+
+type EmbedButtonProps = {
+  audioUrl: string;
+  title: string;
+};
+
+function EmbedButton({ audioUrl, title }: EmbedButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const embedCode = useMemo(() => {
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "";
+    const src = `${origin}/embed?url=${encodeURIComponent(audioUrl)}&title=${encodeURIComponent(title)}`;
+    return `<iframe src="${src}" width="420" height="360" style="border:0;overflow:hidden;" loading="lazy" allow="autoplay"></iframe>`;
+  }, [audioUrl, title]);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(embedCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="
+          ui-label text-[10px] tracking-[0.2em] uppercase
+          px-4 py-3 transition-all duration-200
+          border border-accent-cyan/30 bg-transparent text-accent-cyan/60
+          hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
+        "
+      >
+        GENERATE EMBED CODE
+      </button>
+
+      {isOpen ? (
+        <div className="fixed inset-0 z-50 bg-[#0A192F]/80 backdrop-blur-sm flex items-center justify-center p-6">
+          <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-[#112240]/95 p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="ui-label text-xs tracking-[0.25em] text-accent-cyan uppercase">
+                /// EMBED DEPLOYMENT ///
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="ui-label text-[10px] text-text-secondary hover:text-white transition-colors"
+              >
+                CLOSE
+              </button>
+            </div>
+
+            <textarea
+              readOnly
+              value={embedCode}
+              className="w-full h-36 rounded-lg border border-white/10 bg-[#0A192F]/70 p-3 text-sm text-text-secondary font-mono resize-none focus:outline-none"
+            />
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={copyCode}
+                className="ui-label text-[10px] tracking-[0.2em] uppercase px-4 py-2 border border-accent-cyan/30 text-accent-cyan/70 hover:text-white hover:bg-accent-cyan/10 hover:border-accent-cyan transition-colors"
+              >
+                {copied ? "COPIED" : "COPY CODE"}
+              </button>
+              <p className="text-xs text-text-secondary/80">
+                Paste into any blog or press page to render the player.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -329,6 +446,10 @@ export default function PressArchive() {
             <AssetButton
               label="DOWNLOAD FULL PRESS KIT (.7Z)"
               href="/Static-and-Sync-Press-Kit.7z"
+            />
+            <EmbedButton
+              audioUrl="/Static & Sync - S01E01 - Test Audio for Transcripts.mp3"
+              title="Static & Sync — Sync Test"
             />
             <AssetButton
               label="PRESS KIT (PDF)"
@@ -646,6 +767,135 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+  );
+}
+</file>
+
+<file path="components/DetailView.tsx">
+"use client";
+
+import { motion } from "framer-motion";
+
+type DetailViewProps = {
+  data: any;
+  onBack: () => void;
+  type: "member" | "character";
+};
+
+export default function DetailView({ data, onBack, type }: DetailViewProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="space-y-6"
+    >
+      <button
+        type="button"
+        onClick={onBack}
+        className="
+          sticky top-0 z-10
+          bg-[#0A192F]/80 backdrop-blur-md
+          ui-label text-[10px] tracking-[0.2em] uppercase
+          px-4 py-2 transition-all duration-200
+          border border-accent-cyan/30 text-accent-cyan/60
+          hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
+        "
+      >
+        [ &lt; BACK TO DATABASE ]
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 items-start gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+        <div className="w-full max-w-sm mx-auto lg:col-span-2 lg:sticky lg:top-24">
+          <div className="relative w-full aspect-[3/4] rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+            {data.imageUrl ? (
+              <img
+                src={data.imageUrl}
+                alt={data.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <>
+                <div className="absolute inset-0 opacity-30 bg-[linear-gradient(0deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent)] bg-[length:36px_36px]" />
+                <div className="absolute inset-0 flex items-center justify-center text-text-secondary/60 ui-label text-xs tracking-[0.2em] uppercase">
+                  Portrait Pending
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="lg:col-span-3 space-y-5 text-left">
+          <div className="space-y-2">
+            <h2 className="ui-label text-2xl text-text-primary">{data.name}</h2>
+            <p className="ui-label text-xs tracking-[0.2em] uppercase text-accent-cyan">
+              {data.role}
+            </p>
+            {type === "character" && data.actor ? (
+              <p className="text-xs italic text-text-secondary/80">{data.actor}</p>
+            ) : null}
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // BIOGRAPHIC ENTRY
+            </h3>
+            <p className="text-sm text-text-secondary leading-relaxed">{data.bio}</p>
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // PERSONAL CLEARANCE
+            </h3>
+            {Array.isArray(data.socials) && data.socials.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {data.socials.map((social: { label: string; url: string }) => (
+                  <a
+                    key={`${data.name}-${social.label}`}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ui-label text-[9px] tracking-[0.15em] uppercase px-3 py-1.5 border border-accent-cyan/30 bg-transparent text-accent-cyan/70 transition-colors hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
+            )}
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // EXTENDED DOSSIER
+            </h3>
+            {data.extendedBio ? (
+              <p className="text-sm text-text-secondary leading-relaxed">{data.extendedBio}</p>
+            ) : (
+              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+                Profile Type
+              </p>
+              <p className="text-sm text-text-primary mt-1">
+                {type === "member" ? "Production Team" : "Character Dossier"}
+              </p>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+                Status
+              </p>
+              <p className="text-sm text-text-primary mt-1">Active Record</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 </file>
