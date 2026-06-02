@@ -15,6 +15,7 @@ function AssetButton({ label, href }: AssetButtonProps) {
       rel="noopener noreferrer"
       className="
         ui-label text-[10px] tracking-[0.2em] uppercase
+        flex items-center justify-center w-full text-center
         px-4 py-3 transition-all duration-200
         border border-accent-cyan/30 bg-transparent text-accent-cyan/60
         hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
@@ -59,6 +60,7 @@ function EmbedButton({ audioUrl, title, buttonLabel = "GENERATE EMBED CODE" }: E
         onClick={() => setIsOpen(true)}
         className="
           ui-label text-[10px] tracking-[0.2em] uppercase
+          flex items-center justify-center w-full text-center
           px-4 py-3 transition-all duration-200
           border border-accent-cyan/30 bg-transparent text-accent-cyan/60
           hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
