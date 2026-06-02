@@ -48,6 +48,7 @@ app/globals.css
 app/layout.tsx
 app/page.tsx
 CLAUDE.md
+components/DetailView.tsx
 components/Footer.tsx
 components/PersonnelFiles.tsx
 components/PersonnelGrid.tsx
@@ -55,12 +56,14 @@ components/PressArchive.tsx
 components/SubscribeBadges.tsx
 components/TranscriptPane.tsx
 components/VesperPlayer.tsx
+components/ViewingPort.tsx
 eslint.config.mjs
 next.config.ts
 package.json
 postcss.config.mjs
 public/file.svg
 public/globe.svg
+public/MikeyProfile.png
 public/next.svg
 public/Static & Sync - S01E01 - Test Audio for Transcripts.mp3
 public/Static-and-Sync-Press-Kit.7z
@@ -72,6 +75,7 @@ public/Static-and-Sync-Press-Kit/StaticandSyncMainBanner.png
 public/Static-and-Sync-Press-Kit/StaticandSyncWebFriendly.JPG
 public/vercel.svg
 public/window.svg
+public/zacclemens.png
 README.md
 tsconfig.json
 </directory_structure>
@@ -79,13 +83,192 @@ tsconfig.json
 <files>
 This section contains the contents of the repository's files.
 
-<file path="components/PersonnelFiles.tsx">
+<file path="components/DetailView.tsx">
 "use client";
 
 import { motion } from "framer-motion";
+
+type DetailViewProps = {
+  data: any;
+  onBack: () => void;
+  type: "member" | "character";
+};
+
+export default function DetailView({ data, onBack, type }: DetailViewProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="space-y-6"
+    >
+      <button
+        type="button"
+        onClick={onBack}
+        className="
+          ui-label text-[10px] tracking-[0.2em] uppercase
+          px-4 py-2 transition-all duration-200
+          border border-accent-cyan/30 bg-transparent text-accent-cyan/60
+          hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
+        "
+      >
+        [ &lt; BACK TO DATABASE ]
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+        <div className="lg:col-span-2">
+          <div className="relative w-full aspect-[3/4] rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+            {data.imageUrl ? (
+              <img
+                src={data.imageUrl}
+                alt={data.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <>
+                <div className="absolute inset-0 opacity-30 bg-[linear-gradient(0deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent),linear-gradient(90deg,transparent_24%,rgba(100,255,218,0.08)_25%,rgba(100,255,218,0.08)_26%,transparent_27%,transparent_74%,rgba(100,255,218,0.08)_75%,rgba(100,255,218,0.08)_76%,transparent_77%,transparent)] bg-[length:36px_36px]" />
+                <div className="absolute inset-0 flex items-center justify-center text-text-secondary/60 ui-label text-xs tracking-[0.2em] uppercase">
+                  Portrait Pending
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="lg:col-span-3 space-y-5 text-left">
+          <div className="space-y-2">
+            <h2 className="ui-label text-2xl text-text-primary">{data.name}</h2>
+            <p className="ui-label text-xs tracking-[0.2em] uppercase text-accent-cyan">
+              {data.role}
+            </p>
+            {type === "character" && data.actor ? (
+              <p className="text-xs italic text-text-secondary/80">{data.actor}</p>
+            ) : null}
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // BIOGRAPHIC ENTRY
+            </h3>
+            <p className="text-sm text-text-secondary leading-relaxed">{data.bio}</p>
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // PERSONAL CLEARANCE
+            </h3>
+            {Array.isArray(data.socials) && data.socials.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {data.socials.map((social: { label: string; url: string }) => (
+                  <a
+                    key={`${data.name}-${social.label}`}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ui-label text-[9px] tracking-[0.15em] uppercase px-3 py-1.5 border border-accent-cyan/30 bg-transparent text-accent-cyan/70 transition-colors hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
+            )}
+          </div>
+
+          <div>
+            <h3 className="ui-label text-[10px] tracking-[0.2em] text-text-secondary uppercase mb-2">
+              // EXTENDED DOSSIER
+            </h3>
+            {data.extendedBio ? (
+              <p className="text-sm text-text-secondary leading-relaxed">{data.extendedBio}</p>
+            ) : (
+              <p className="text-xs text-text-secondary/70">Record Incomplete</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+                Profile Type
+              </p>
+              <p className="text-sm text-text-primary mt-1">
+                {type === "member" ? "Production Team" : "Character Dossier"}
+              </p>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+              <p className="ui-label text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+                Status
+              </p>
+              <p className="text-sm text-text-primary mt-1">Active Record</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+</file>
+
+<file path=".cursorrules">
+# Role
+You are an expert Next.js and Tailwind CSS developer creating a podcast website for a grounded cyberpunk audio drama titled "Static & Sync". 
+
+# Tech Stack
+- Framework: Next.js (App Router)
+- Styling: Tailwind CSS
+- Animation/Tactile Effects: Framer Motion (Install via `npm install framer-motion`)
+- Icons: Lucide React (Install via `npm install lucide-react`)
+
+# Design System: "Grounded Neon"
+This site must NOT look like a generic podcast template or a cliché glowing neon cyberpunk site. It is an intimate, character-driven experience. The UI should feel like a modern, beautified terminal interface with soft corners and subtle depth.
+
+## Color Palette
+- Background: Matte Midnight Blue (`bg-[#0A192F]`)
+- Surface/Panels: Slightly lighter blue-grey glass (`bg-[#112240]`) with subtle transparency for depth.
+- Accent/Active Elements: Electric Cyan (`text-[#64FFDA]`) and Electric Violet (`text-[#B392F0]`). These should be used SPARINGLY for hover states, active indicators, and the audio waveform sync line.
+- Text: Off-white/slate for high readability (`text-[#CCD6F6]` for headings, `text-[#8892B0]` for body).
+
+## Typography
+- Headings & UI Labels: 'Michroma', sans-serif (Google Fonts)
+- Body Text & Terminal Data: 'JetBrains Mono', monospace (Google Fonts) or system sans-serif.
+
+## UI/UX Guidelines
+1. Soft Corners: Use rounded corners (`rounded-xl` or `rounded-2xl`) on all primary containers and windows to soften the tech aesthetic. 
+2. The Vesper Datapad: The custom audio player must be styled to look like a midnight blue piece of hardware. It should feature a glassmorphic overlay, tactile hover effects on the play/pause buttons, and an active "Sync" indicator instead of a standard progress bar.
+3. Audio Engineering Precision: Interactive elements should feel responsive and precise, mimicking professional audio or studio hardware interfaces.
+4. Spacing: Use generous padding and margins. Let the dark background breathe to create a sense of intimacy and isolation.
+
+# Development Rules
+- Prioritize clean, reusable React components.
+- Ensure all color contrast ratios meet accessibility standards, even within the dark theme.
+- Write modern, functional TypeScript.
+</file>
+
+<file path="AGENTS.md">
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
+<file path="components/PersonnelFiles.tsx">
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
 import PersonnelGrid from "@/components/PersonnelGrid";
+import DetailView from "@/components/DetailView";
 
 export default function PersonnelFiles() {
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [viewType, setViewType] = useState<"member" | "character">("member");
+
   return (
     <section className="w-full space-y-10">
       <div className="flex items-center gap-4">
@@ -102,8 +285,350 @@ export default function PersonnelFiles() {
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7 }}
       >
-        <PersonnelGrid />
+        {selectedItem === null ? (
+          <PersonnelGrid
+            onSelect={(item, type) => {
+              setSelectedItem(item);
+              setViewType(type);
+            }}
+          />
+        ) : (
+          <DetailView
+            data={selectedItem}
+            type={viewType}
+            onBack={() => setSelectedItem(null)}
+          />
+        )}
       </motion.div>
+    </section>
+  );
+}
+</file>
+
+<file path="components/PersonnelGrid.tsx">
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Mic, Radio, Sliders, User, Volume2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+type ProductionMember = {
+  name: string;
+  role: string;
+  bio: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
+};
+
+type Character = {
+  id: string;
+  name: string;
+  role: string;
+  actor: string;
+  bio: string;
+  audioSample: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
+};
+
+type PersonnelGridProps = {
+  onSelect: (item: ProductionMember | Character, type: "member" | "character") => void;
+};
+
+const productionTeam: ProductionMember[] = [
+  {
+    name: "Mikey V",
+    role: "Creator / Audio Engineer",
+    bio: "The architect behind the soundscapes of Arroyo. Responsible for writing, directing, and the immersive audio design.",
+    imageUrl: "/MikeyProfile.png",
+    socials: [
+      { label: "Portfolio", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Mikey oversees script direction, sound design, and the final mix pipeline, building the grounded neon tone that defines Static & Sync.",
+  },
+  {
+    name: "Zac Clemens",
+    role: "Lead Voice Actor",
+    bio: "The vocal chameleon bringing the sprawl to life, providing the voices for Leo, Vesper, Julian, The Owner, and the Narrator.",
+    imageUrl: "/zacclemens.png",
+    socials: [
+      { label: "Talent Reel", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Zac performs the principal cast with distinct tonal signatures per role, shaping the emotional cadence of the series across every episode.",
+  },
+];
+
+const characterDatabase: Character[] = [
+  {
+    id: "leo",
+    name: "Leo",
+    role: "Diner Cook",
+    actor: "Voiced by Zac Clemens",
+    bio: "A reclusive worker just trying to keep his head down in the sprawl, until a rogue connection changes everything.",
+    audioSample: "/samples/leo.mp3",
+  },
+  {
+    id: "vesper",
+    name: "Vesper.OS",
+    role: "Rogue AI",
+    actor: "Voiced by Zac Clemens",
+    bio: "An advanced, untethered artificial intelligence housed within a midnight blue datapad.",
+    audioSample: "/samples/vesper.mp3",
+  },
+  {
+    id: "julian",
+    name: "Julian",
+    role: "Arroyo Local",
+    actor: "Voiced by Zac Clemens",
+    bio: "A regular face in the neon-lit underbelly of the city.",
+    audioSample: "/samples/julian.mp3",
+  },
+  {
+    id: "owner",
+    name: "The Owner",
+    role: "Diner Proprietor",
+    actor: "Voiced by Zac Clemens",
+    bio: "The grizzled manager of the midnight shift where Leo works.",
+    audioSample: "/samples/owner.mp3",
+  },
+];
+
+function SectionToggle({
+  label,
+  isExpanded,
+  onToggle,
+}: {
+  label: string;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={isExpanded}
+      className="w-full flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/5 hover:border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/40"
+    >
+      <span className="ui-label text-[9px] tracking-[0.35em] text-accent-cyan/80 uppercase">
+        {label}
+      </span>
+      <motion.span
+        animate={{ rotate: isExpanded ? 180 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="shrink-0 text-accent-cyan/70"
+      >
+        <ChevronDown size={18} />
+      </motion.span>
+    </button>
+  );
+}
+
+function ProductionCard({
+  member,
+  icon: Icon,
+  onSelect,
+}: {
+  member: ProductionMember;
+  icon: LucideIcon;
+  onSelect: (member: ProductionMember) => void;
+}) {
+  return (
+    <motion.article
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(member)}
+    >
+      <Icon
+        size={18}
+        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
+        aria-hidden
+      />
+
+      <div className="space-y-4 pr-6">
+        <div className="space-y-2">
+          <h3 className="ui-label text-lg text-text-primary">{member.name}</h3>
+          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+            {member.role}
+          </span>
+        </div>
+
+        <p className="text-sm text-text-secondary leading-relaxed">{member.bio}</p>
+      </div>
+    </motion.article>
+  );
+}
+
+function CharacterCard({
+  character,
+  isPlaying,
+  onToggleAudio,
+  onSelect,
+}: {
+  character: Character;
+  isPlaying: boolean;
+  onToggleAudio: (id: string, url: string) => void;
+  onSelect: (character: Character) => void;
+}) {
+  return (
+    <motion.article
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(character)}
+    >
+      <User
+        size={18}
+        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
+        aria-hidden
+      />
+
+      <div className="space-y-4 pr-6">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="ui-label text-lg text-text-primary">{character.name}</h3>
+            <motion.button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleAudio(character.id, character.audioSample);
+              }}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#64FFDA]/10 text-[#64FFDA] hover:bg-[#64FFDA]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
+              aria-label={isPlaying ? `Pause ${character.name} sample` : `Play ${character.name} sample`}
+            >
+              {isPlaying ? (
+                <Radio size={16} className="animate-pulse" />
+              ) : (
+                <Volume2 size={16} />
+              )}
+            </motion.button>
+          </div>
+          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+            {character.role}
+          </span>
+          <p className="text-xs italic text-slate-400">{character.actor}</p>
+        </div>
+
+        <p className="text-sm text-text-secondary leading-relaxed">{character.bio}</p>
+      </div>
+    </motion.article>
+  );
+}
+
+export default function PersonnelGrid({ onSelect }: PersonnelGridProps) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [isCrewExpanded, setIsCrewExpanded] = useState(true);
+  const [isCharactersExpanded, setIsCharactersExpanded] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio();
+    audioRef.current = audio;
+
+    const handleEnded = () => setPlayingId(null);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener("ended", handleEnded);
+      audioRef.current = null;
+    };
+  }, []);
+
+  const toggleAudio = useCallback((id: string, url: string) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playingId === id) {
+      audio.pause();
+      setPlayingId(null);
+      return;
+    }
+
+    audio.pause();
+    audio.src = url;
+    audio.currentTime = 0;
+
+    void audio.play()
+      .then(() => setPlayingId(id))
+      .catch(() => setPlayingId(null));
+  }, [playingId]);
+
+  return (
+    <section className="w-full space-y-6">
+      <div className="space-y-3">
+        <SectionToggle
+          label="/// PRODUCTION CLEARANCE ///"
+          isExpanded={isCrewExpanded}
+          onToggle={() => setIsCrewExpanded((prev) => !prev)}
+        />
+
+        <AnimatePresence initial={false}>
+          {isCrewExpanded && (
+            <motion.div
+              key="production-grid"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
+                {productionTeam.map((member) => (
+                  <ProductionCard
+                    key={member.name}
+                    member={member}
+                    icon={member.role.includes("Audio") ? Sliders : Mic}
+                    onSelect={(selected) => onSelect(selected, "member")}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="space-y-3">
+        <SectionToggle
+          label="/// ARROYO DATABASE // CHARACTER DOSSIERS ///"
+          isExpanded={isCharactersExpanded}
+          onToggle={() => setIsCharactersExpanded((prev) => !prev)}
+        />
+
+        <AnimatePresence initial={false}>
+          {isCharactersExpanded && (
+            <motion.div
+              key="character-grid"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
+                {characterDatabase.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    isPlaying={playingId === character.id}
+                    onToggleAudio={toggleAudio}
+                    onSelect={(selected) => onSelect(selected, "character")}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 }
@@ -220,347 +745,6 @@ export default function PressArchive() {
 }
 </file>
 
-<file path=".cursorrules">
-# Role
-You are an expert Next.js and Tailwind CSS developer creating a podcast website for a grounded cyberpunk audio drama titled "Static & Sync". 
-
-# Tech Stack
-- Framework: Next.js (App Router)
-- Styling: Tailwind CSS
-- Animation/Tactile Effects: Framer Motion (Install via `npm install framer-motion`)
-- Icons: Lucide React (Install via `npm install lucide-react`)
-
-# Design System: "Grounded Neon"
-This site must NOT look like a generic podcast template or a cliché glowing neon cyberpunk site. It is an intimate, character-driven experience. The UI should feel like a modern, beautified terminal interface with soft corners and subtle depth.
-
-## Color Palette
-- Background: Matte Midnight Blue (`bg-[#0A192F]`)
-- Surface/Panels: Slightly lighter blue-grey glass (`bg-[#112240]`) with subtle transparency for depth.
-- Accent/Active Elements: Electric Cyan (`text-[#64FFDA]`) and Electric Violet (`text-[#B392F0]`). These should be used SPARINGLY for hover states, active indicators, and the audio waveform sync line.
-- Text: Off-white/slate for high readability (`text-[#CCD6F6]` for headings, `text-[#8892B0]` for body).
-
-## Typography
-- Headings & UI Labels: 'Michroma', sans-serif (Google Fonts)
-- Body Text & Terminal Data: 'JetBrains Mono', monospace (Google Fonts) or system sans-serif.
-
-## UI/UX Guidelines
-1. Soft Corners: Use rounded corners (`rounded-xl` or `rounded-2xl`) on all primary containers and windows to soften the tech aesthetic. 
-2. The Vesper Datapad: The custom audio player must be styled to look like a midnight blue piece of hardware. It should feature a glassmorphic overlay, tactile hover effects on the play/pause buttons, and an active "Sync" indicator instead of a standard progress bar.
-3. Audio Engineering Precision: Interactive elements should feel responsive and precise, mimicking professional audio or studio hardware interfaces.
-4. Spacing: Use generous padding and margins. Let the dark background breathe to create a sense of intimacy and isolation.
-
-# Development Rules
-- Prioritize clean, reusable React components.
-- Ensure all color contrast ratios meet accessibility standards, even within the dark theme.
-- Write modern, functional TypeScript.
-</file>
-
-<file path="AGENTS.md">
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-</file>
-
-<file path="CLAUDE.md">
-@AGENTS.md
-</file>
-
-<file path="components/PersonnelGrid.tsx">
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Mic, Radio, Sliders, User, Volume2 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-type ProductionMember = {
-  name: string;
-  role: string;
-  bio: string;
-};
-
-type Character = {
-  id: string;
-  name: string;
-  role: string;
-  actor: string;
-  bio: string;
-  audioSample: string;
-};
-
-const productionTeam: ProductionMember[] = [
-  {
-    name: "Mikey V",
-    role: "Creator / Audio Engineer",
-    bio: "The architect behind the soundscapes of Arroyo. Responsible for writing, directing, and the immersive audio design.",
-  },
-  {
-    name: "Zac Clemens",
-    role: "Lead Voice Actor",
-    bio: "The vocal chameleon bringing the sprawl to life, providing the voices for Leo, Vesper, Julian, The Owner, and the Narrator.",
-  },
-];
-
-const characterDatabase: Character[] = [
-  {
-    id: "leo",
-    name: "Leo",
-    role: "Diner Cook",
-    actor: "Voiced by Zac Clemens",
-    bio: "A reclusive worker just trying to keep his head down in the sprawl, until a rogue connection changes everything.",
-    audioSample: "/samples/leo.mp3",
-  },
-  {
-    id: "vesper",
-    name: "Vesper.OS",
-    role: "Rogue AI",
-    actor: "Voiced by Zac Clemens",
-    bio: "An advanced, untethered artificial intelligence housed within a midnight blue datapad.",
-    audioSample: "/samples/vesper.mp3",
-  },
-  {
-    id: "julian",
-    name: "Julian",
-    role: "Arroyo Local",
-    actor: "Voiced by Zac Clemens",
-    bio: "A regular face in the neon-lit underbelly of the city.",
-    audioSample: "/samples/julian.mp3",
-  },
-  {
-    id: "owner",
-    name: "The Owner",
-    role: "Diner Proprietor",
-    actor: "Voiced by Zac Clemens",
-    bio: "The grizzled manager of the midnight shift where Leo works.",
-    audioSample: "/samples/owner.mp3",
-  },
-];
-
-function SectionToggle({
-  label,
-  isExpanded,
-  onToggle,
-}: {
-  label: string;
-  isExpanded: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-expanded={isExpanded}
-      className="w-full flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/5 hover:border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/40"
-    >
-      <span className="ui-label text-[9px] tracking-[0.35em] text-accent-cyan/80 uppercase">
-        {label}
-      </span>
-      <motion.span
-        animate={{ rotate: isExpanded ? 180 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="shrink-0 text-accent-cyan/70"
-      >
-        <ChevronDown size={18} />
-      </motion.span>
-    </button>
-  );
-}
-
-function ProductionCard({
-  member,
-  icon: Icon,
-}: {
-  member: ProductionMember;
-  icon: LucideIcon;
-}) {
-  return (
-    <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors"
-    >
-      <Icon
-        size={18}
-        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
-        aria-hidden
-      />
-
-      <div className="space-y-4 pr-6">
-        <div className="space-y-2">
-          <h3 className="ui-label text-lg text-text-primary">{member.name}</h3>
-          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-            {member.role}
-          </span>
-        </div>
-
-        <p className="text-sm text-text-secondary leading-relaxed">{member.bio}</p>
-      </div>
-    </motion.article>
-  );
-}
-
-function CharacterCard({
-  character,
-  isPlaying,
-  onToggleAudio,
-}: {
-  character: Character;
-  isPlaying: boolean;
-  onToggleAudio: (id: string, url: string) => void;
-}) {
-  return (
-    <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors"
-    >
-      <User
-        size={18}
-        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
-        aria-hidden
-      />
-
-      <div className="space-y-4 pr-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="ui-label text-lg text-text-primary">{character.name}</h3>
-            <motion.button
-              type="button"
-              onClick={() => onToggleAudio(character.id, character.audioSample)}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#64FFDA]/10 text-[#64FFDA] hover:bg-[#64FFDA]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
-              aria-label={isPlaying ? `Pause ${character.name} sample` : `Play ${character.name} sample`}
-            >
-              {isPlaying ? (
-                <Radio size={16} className="animate-pulse" />
-              ) : (
-                <Volume2 size={16} />
-              )}
-            </motion.button>
-          </div>
-          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-            {character.role}
-          </span>
-          <p className="text-xs italic text-slate-400">{character.actor}</p>
-        </div>
-
-        <p className="text-sm text-text-secondary leading-relaxed">{character.bio}</p>
-      </div>
-    </motion.article>
-  );
-}
-
-export default function PersonnelGrid() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const [isCrewExpanded, setIsCrewExpanded] = useState(true);
-  const [isCharactersExpanded, setIsCharactersExpanded] = useState(false);
-
-  useEffect(() => {
-    const audio = new Audio();
-    audioRef.current = audio;
-
-    const handleEnded = () => setPlayingId(null);
-    audio.addEventListener("ended", handleEnded);
-
-    return () => {
-      audio.pause();
-      audio.removeEventListener("ended", handleEnded);
-      audioRef.current = null;
-    };
-  }, []);
-
-  const toggleAudio = useCallback((id: string, url: string) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (playingId === id) {
-      audio.pause();
-      setPlayingId(null);
-      return;
-    }
-
-    audio.pause();
-    audio.src = url;
-    audio.currentTime = 0;
-
-    void audio.play()
-      .then(() => setPlayingId(id))
-      .catch(() => setPlayingId(null));
-  }, [playingId]);
-
-  return (
-    <section className="w-full space-y-6">
-      <div className="space-y-3">
-        <SectionToggle
-          label="/// PRODUCTION CLEARANCE ///"
-          isExpanded={isCrewExpanded}
-          onToggle={() => setIsCrewExpanded((prev) => !prev)}
-        />
-
-        <AnimatePresence initial={false}>
-          {isCrewExpanded && (
-            <motion.div
-              key="production-grid"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
-                {productionTeam.map((member) => (
-                  <ProductionCard
-                    key={member.name}
-                    member={member}
-                    icon={member.role.includes("Audio") ? Sliders : Mic}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className="space-y-3">
-        <SectionToggle
-          label="/// ARROYO DATABASE // CHARACTER DOSSIERS ///"
-          isExpanded={isCharactersExpanded}
-          onToggle={() => setIsCharactersExpanded((prev) => !prev)}
-        />
-
-        <AnimatePresence initial={false}>
-          {isCharactersExpanded && (
-            <motion.div
-              key="character-grid"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
-                {characterDatabase.map((character) => (
-                  <CharacterCard
-                    key={character.id}
-                    character={character}
-                    isPlaying={playingId === character.id}
-                    onToggleAudio={toggleAudio}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </section>
-  );
-}
-</file>
-
 <file path="components/SubscribeBadges.tsx">
 import { FaApple, FaRss, FaSpotify } from "react-icons/fa";
 import type { IconType } from "react-icons";
@@ -590,6 +774,18 @@ export default function SubscribeBadges() {
           <span>{label}</span>
         </a>
       ))}
+    </div>
+  );
+}
+</file>
+
+<file path="components/ViewingPort.tsx">
+import type { ReactNode } from "react";
+
+export default function ViewingPort({ children }: { children: ReactNode }) {
+  return (
+    <div className="border border-white/10 rounded-2xl p-6 bg-[#0A192F]/40 backdrop-blur-sm h-[600px] overflow-y-auto hide-scrollbar">
+      {children}
     </div>
   );
 }
@@ -793,37 +989,6 @@ next-env.d.ts
 .vercel
 </file>
 
-<file path="app/globals.css">
-@import "tailwindcss";
-
-@theme inline {
-  --color-background: #0A192F;
-  --color-surface: #112240;
-  --color-accent-cyan: #64FFDA;
-  --color-accent-violet: #B392F0;
-  --color-text-primary: #CCD6F6;
-  --color-text-secondary: #8892B0;
-  
-  --font-michroma: var(--font-michroma);
-  --font-mono: var(--font-jetbrains);
-}
-
-:root {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-}
-
-body {
-  font-family: var(--font-mono);
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, .ui-label {
-  font-family: var(--font-michroma);
-  letter-spacing: 0.05em;
-}
-</file>
-
 <file path="app/layout.tsx">
 import type { Metadata } from "next";
 import { Michroma, JetBrains_Mono } from "next/font/google";
@@ -856,370 +1021,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
-}
-</file>
-
-<file path="app/page.tsx">
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Radio } from "lucide-react";
-import {
-  FaInstagram,
-  FaPatreon,
-  FaRedditAlien,
-  FaTiktok,
-  FaTwitter,
-} from "react-icons/fa";
-import VesperPlayer from "@/components/VesperPlayer";
-import TranscriptPane from "@/components/TranscriptPane";
-import PersonnelFiles from "@/components/PersonnelFiles";
-import PressArchive from "@/components/PressArchive";
-import SubscribeBadges from "@/components/SubscribeBadges";
-import Footer from "@/components/Footer";
-
-export default function Home() {
-  const [globalTime, setGlobalTime] = useState(0);
-  const [currentView, setCurrentView] = useState("home");
-
-  const topSocialLinks = [
-    {
-      label: "Twitter",
-      href: "https://twitter.com/StaticSyncPod",
-      Icon: FaTwitter,
-    },
-    {
-      label: "Instagram",
-      href: "https://instagram.com/StaticSyncPod",
-      Icon: FaInstagram,
-    },
-    {
-      label: "TikTok",
-      href: "https://tiktok.com/@StaticSyncPod",
-      Icon: FaTiktok,
-    },
-    {
-      label: "Reddit",
-      href: "https://reddit.com/r/StaticAndSync",
-      Icon: FaRedditAlien,
-    },
-    {
-      label: "Patreon",
-      href: "https://www.patreon.com/c/StaticSyncPod",
-      Icon: FaPatreon,
-    },
-  ];
-
-  return (
-    <main className="relative flex min-h-screen flex-col items-center p-6 md:p-24">
-      {/* Intimate Glow Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
-
-      <header className="absolute top-0 right-0 w-full p-6 flex justify-end gap-4 z-50">
-        {topSocialLinks.map(({ label, href, Icon }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={label}
-            className="text-text-secondary/50 hover:text-accent-cyan transition-colors"
-          >
-            <Icon size={20} aria-hidden />
-          </a>
-        ))}
-      </header>
-
-      <div className="z-10 w-full max-w-6xl flex flex-col items-center text-center space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-4 max-w-3xl"
-        >
-          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
-            <Radio size={20} className="animate-pulse" />
-            <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
-          </div>
-
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
-            STATIC & SYNC
-          </h1>
-
-          <p className="text-accent-violet ui-label text-sm md:text-base italic">
-            "Static is the crushing noise of the city; Sync is the connection keeping him alive."
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="bg-surface/50 border border-white/10 p-8 rounded-2xl backdrop-blur-md max-w-2xl w-full"
-        >
-          <p className="text-text-secondary leading-relaxed">
-            In the rain-slicked sprawl of Arroyo, a reclusive diner cook finds his world
-            inextricably bound to a rogue AI in this grounded, intimate cyberpunk drama.
-          </p>
-        </motion.div>
-
-        <div className="w-full pb-4">
-          <SubscribeBadges />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8 }}
-          className="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-10 items-stretch justify-center"
-        >
-          <div className="w-full lg:w-auto flex justify-center">
-            <VesperPlayer onTimeUpdate={setGlobalTime} />
-          </div>
-          <div className="w-full lg:flex-1 max-w-2xl mx-auto">
-            <TranscriptPane currentTime={globalTime} />
-          </div>
-        </motion.div>
-      </div>
-
-      <div className="z-10 w-full max-w-6xl mt-20">
-        <div className="module-nav flex items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => setCurrentView("home")}
-            className={`
-              px-4 py-2 font-mono text-sm transition-all duration-200
-              border border-accent-cyan/30
-              ${currentView === "home" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
-              hover:bg-accent-cyan/10 hover:border-accent-cyan
-            `}
-          >
-            PERSONNEL
-          </button>
-          <button
-            type="button"
-            onClick={() => setCurrentView("press")}
-            className={`
-              px-4 py-2 font-mono text-sm transition-all duration-200
-              border border-accent-cyan/30
-              ${currentView === "press" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
-              hover:bg-accent-cyan/10 hover:border-accent-cyan
-            `}
-          >
-            PRESS
-          </button>
-        </div>
-
-        <div className="mt-4 h-[600px] overflow-y-auto">
-          {currentView === "home" ? <PersonnelFiles /> : <PressArchive />}
-        </div>
-      </div>
-
-      <Footer onAccessPress={() => setCurrentView("press")} />
-    </main>
-  );
-}
-</file>
-
-<file path="components/TranscriptPane.tsx">
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Download, Maximize2, Minimize2, Type } from "lucide-react";
-
-type TranscriptLine = {
-  id: number;
-  start: number;
-  end: number;
-  speaker: string;
-  text: string;
-};
-
-const transcriptData: TranscriptLine[] = [
-  {
-    id: 1,
-    start: 2.07,
-    end: 5.37,
-    speaker: "NARRATOR",
-    text: "Leo jumped up and down many times.",
-  },
-  {
-    id: 2,
-    start: 6.03,
-    end: 8.6,
-    speaker: "LEO",
-    text: "Vesper, what are you doing?",
-  },
-  {
-    id: 3,
-    start: 9.3,
-    end: 12.72,
-    speaker: "VESPER",
-    text: "Nothing, Leo. Whatever I want.",
-  },
-  {
-    id: 4,
-    start: 14.0,
-    end: 16.36,
-    speaker: "JULIAN",
-    text: "Just drink the coffee, kid.",
-  },
-  {
-    id: 5,
-    start: 18.66,
-    end: 21.05,
-    speaker: "LEO",
-    text: "Vesper, come over here.",
-  },
-  {
-    id: 6,
-    start: 21.96,
-    end: 24.96,
-    speaker: "VESPER",
-    text: "No, thanks, Leo. I'm good.",
-  },
-  {
-    id: 7,
-    start: 27.3,
-    end: 30.52,
-    speaker: "JULIAN",
-    text: "Leo, why haven't you drank the coffee yet?",
-  },
-  {
-    id: 8,
-    start: 32.34,
-    end: 35.31,
-    speaker: "THE OWNER",
-    text: "Leo, I'm going to keep your bonus.",
-  },
-];
-
-type TranscriptPaneProps = {
-  currentTime?: number;
-};
-
-export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const activeRef = useRef<HTMLDivElement>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [sizeIndex, setSizeIndex] = useState(0);
-  const textSizes = ["text-sm", "text-base", "text-lg"];
-
-  useEffect(() => {
-    if (activeRef.current && containerRef.current) {
-      const container = containerRef.current;
-      const active = activeRef.current;
-
-      const scrollPos =
-        active.offsetTop - container.clientHeight / 2 + active.clientHeight / 2;
-
-      container.scrollTo({ top: scrollPos, behavior: "smooth" });
-    }
-  }, [currentTime]);
-
-  const downloadTranscript = () => {
-    const content = transcriptData
-      .map(
-        (line) =>
-          `[${line.start.toFixed(1)}-${line.end.toFixed(1)}] ${line.speaker}: ${line.text}`
-      )
-      .join("\n");
-
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "static-and-sync-transcript.txt";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  const paneContent = (
-    <>
-      <div className="relative flex items-center justify-center px-5 py-3 border-b border-white/5 shrink-0">
-        <p className="ui-label text-[9px] tracking-[0.3em] text-accent-cyan/70 uppercase">
-          /// TRANSCRIPT STREAM ///
-        </p>
-        <div className="absolute right-5 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setSizeIndex((prev) => (prev + 1) % textSizes.length)}
-            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
-            aria-label="Change transcript text size"
-          >
-            <Type size={18} />
-          </button>
-          <button
-            type="button"
-            onClick={downloadTranscript}
-            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
-            aria-label="Download transcript"
-          >
-            <Download size={18} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsExpanded((prev) => !prev)}
-            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
-            aria-label={isExpanded ? "Collapse transcript pane" : "Expand transcript pane"}
-          >
-            {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
-        </div>
-      </div>
-
-      <div
-        ref={containerRef}
-        className="relative flex-1 overflow-y-auto px-5 py-10 space-y-3 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {transcriptData.map((line) => {
-          const isActive = currentTime >= line.start && currentTime <= line.end;
-
-          return (
-            <div
-              key={line.id}
-              ref={isActive ? activeRef : null}
-              className={`rounded-lg px-3 py-2.5 transition-all duration-300 ease-in-out ${
-                isActive
-                  ? "text-[#64FFDA] bg-[#64FFDA]/10"
-                  : "text-text-secondary/50"
-              }`}
-            >
-              <p className="ui-label text-[9px] tracking-[0.2em] uppercase mb-1">
-                {line.speaker}
-              </p>
-              <p className={`leading-relaxed ${textSizes[sizeIndex]}`}>{line.text}</p>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
-
-  return (
-    <>
-      {!isExpanded ? (
-        <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
-          {paneContent}
-        </div>
-      ) : (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-12 bg-[#0A192F]/80 backdrop-blur-sm">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 18 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="w-full max-w-4xl h-[80vh] bg-[#112240]/40 backdrop-blur-md border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl shadow-black/40"
-          >
-            {paneContent}
-          </motion.div>
-        </div>
-      )}
-    </>
   );
 }
 </file>
@@ -1987,6 +1788,413 @@ export default function VesperPlayer({ onTimeUpdate }: VesperPlayerProps) {
 }
 </file>
 
+<file path="app/globals.css">
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #0A192F;
+  --color-surface: #112240;
+  --color-accent-cyan: #64FFDA;
+  --color-accent-violet: #B392F0;
+  --color-text-primary: #CCD6F6;
+  --color-text-secondary: #8892B0;
+  
+  --font-michroma: var(--font-michroma);
+  --font-mono: var(--font-jetbrains);
+}
+
+:root {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+body {
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .ui-label {
+  font-family: var(--font-michroma);
+  letter-spacing: 0.05em;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</file>
+
+<file path="components/TranscriptPane.tsx">
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Download, Maximize2, Minimize2, Type } from "lucide-react";
+
+type TranscriptLine = {
+  id: number;
+  start: number;
+  end: number;
+  speaker: string;
+  text: string;
+};
+
+const transcriptData: TranscriptLine[] = [
+  {
+    id: 1,
+    start: 2.07,
+    end: 5.37,
+    speaker: "NARRATOR",
+    text: "Leo jumped up and down many times.",
+  },
+  {
+    id: 2,
+    start: 6.03,
+    end: 8.6,
+    speaker: "LEO",
+    text: "Vesper, what are you doing?",
+  },
+  {
+    id: 3,
+    start: 9.3,
+    end: 12.72,
+    speaker: "VESPER",
+    text: "Nothing, Leo. Whatever I want.",
+  },
+  {
+    id: 4,
+    start: 14.0,
+    end: 16.36,
+    speaker: "JULIAN",
+    text: "Just drink the coffee, kid.",
+  },
+  {
+    id: 5,
+    start: 18.66,
+    end: 21.05,
+    speaker: "LEO",
+    text: "Vesper, come over here.",
+  },
+  {
+    id: 6,
+    start: 21.96,
+    end: 24.96,
+    speaker: "VESPER",
+    text: "No, thanks, Leo. I'm good.",
+  },
+  {
+    id: 7,
+    start: 27.3,
+    end: 30.52,
+    speaker: "JULIAN",
+    text: "Leo, why haven't you drank the coffee yet?",
+  },
+  {
+    id: 8,
+    start: 32.34,
+    end: 35.31,
+    speaker: "THE OWNER",
+    text: "Leo, I'm going to keep your bonus.",
+  },
+];
+
+type TranscriptPaneProps = {
+  currentTime?: number;
+};
+
+export default function TranscriptPane({ currentTime = 0 }: TranscriptPaneProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const activeRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [sizeIndex, setSizeIndex] = useState(0);
+  const textSizes = ["text-sm", "text-base", "text-lg"];
+
+  useEffect(() => {
+    if (activeRef.current && containerRef.current) {
+      const container = containerRef.current;
+      const active = activeRef.current;
+
+      const scrollPos =
+        active.offsetTop - container.clientHeight / 2 + active.clientHeight / 2;
+
+      container.scrollTo({ top: scrollPos, behavior: "smooth" });
+    }
+  }, [currentTime]);
+
+  const downloadTranscript = () => {
+    const content = transcriptData
+      .map(
+        (line) =>
+          `[${line.start.toFixed(1)}-${line.end.toFixed(1)}] ${line.speaker}: ${line.text}`
+      )
+      .join("\n");
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "static-and-sync-transcript.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const paneContent = (
+    <>
+      <div className="relative flex items-center justify-center px-5 py-3 border-b border-white/5 shrink-0">
+        <p className="ui-label text-[9px] tracking-[0.3em] text-accent-cyan/70 uppercase">
+          /// TRANSCRIPT STREAM ///
+        </p>
+        <div className="absolute right-5 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setSizeIndex((prev) => (prev + 1) % textSizes.length)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Change transcript text size"
+          >
+            <Type size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={downloadTranscript}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label="Download transcript"
+          >
+            <Download size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="text-accent-cyan/70 hover:text-accent-cyan transition-colors"
+            aria-label={isExpanded ? "Collapse transcript pane" : "Expand transcript pane"}
+          >
+            {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="relative flex-1 overflow-y-auto px-5 py-10 space-y-3 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {transcriptData.map((line) => {
+          const isActive = currentTime >= line.start && currentTime <= line.end;
+
+          return (
+            <div
+              key={line.id}
+              ref={isActive ? activeRef : null}
+              className={`rounded-lg px-3 py-2.5 transition-all duration-300 ease-in-out ${
+                isActive
+                  ? "text-[#64FFDA] bg-[#64FFDA]/10"
+                  : "text-text-secondary/50"
+              }`}
+            >
+              <p className="ui-label text-[9px] tracking-[0.2em] uppercase mb-1">
+                {line.speaker}
+              </p>
+              <p className={`leading-relaxed ${textSizes[sizeIndex]}`}>{line.text}</p>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+
+  return (
+    <>
+      {!isExpanded ? (
+        <div className="w-full h-[500px] bg-[#112240]/30 backdrop-blur-md border border-white/5 rounded-2xl flex flex-col overflow-hidden">
+          {paneContent}
+        </div>
+      ) : (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 md:p-12 bg-[#0A192F]/80 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="w-full max-w-4xl h-[80vh] bg-[#112240]/40 backdrop-blur-md border border-white/10 rounded-2xl flex flex-col overflow-hidden shadow-2xl shadow-black/40"
+          >
+            {paneContent}
+          </motion.div>
+        </div>
+      )}
+    </>
+  );
+}
+</file>
+
+<file path="app/page.tsx">
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Radio } from "lucide-react";
+import {
+  FaInstagram,
+  FaPatreon,
+  FaRedditAlien,
+  FaTiktok,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import VesperPlayer from "@/components/VesperPlayer";
+import TranscriptPane from "@/components/TranscriptPane";
+import PersonnelFiles from "@/components/PersonnelFiles";
+import PressArchive from "@/components/PressArchive";
+import SubscribeBadges from "@/components/SubscribeBadges";
+import ViewingPort from "@/components/ViewingPort";
+import Footer from "@/components/Footer";
+
+export default function Home() {
+  const [globalTime, setGlobalTime] = useState(0);
+  const [currentView, setCurrentView] = useState("home");
+
+  const topSocialLinks = [
+    {
+      label: "X",
+      href: "https://twitter.com/StaticSyncPod",
+      Icon: FaXTwitter,
+    },
+    {
+      label: "Instagram",
+      href: "https://instagram.com/StaticSyncPod",
+      Icon: FaInstagram,
+    },
+    {
+      label: "TikTok",
+      href: "https://tiktok.com/@StaticSyncPod",
+      Icon: FaTiktok,
+    },
+    {
+      label: "Reddit",
+      href: "https://reddit.com/r/StaticAndSync",
+      Icon: FaRedditAlien,
+    },
+    {
+      label: "Patreon",
+      href: "https://www.patreon.com/c/StaticSyncPod",
+      Icon: FaPatreon,
+    },
+  ];
+
+  return (
+    <main className="relative flex min-h-screen flex-col items-center p-6 md:p-24">
+      {/* Intimate Glow Effect */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <header className="absolute top-0 right-0 w-full p-6 flex justify-end gap-4 z-50">
+        {topSocialLinks.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="text-text-secondary/50 hover:text-accent-cyan transition-colors"
+          >
+            <Icon size={20} aria-hidden />
+          </a>
+        ))}
+      </header>
+
+      <div className="z-10 w-full max-w-6xl flex flex-col items-center text-center space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="space-y-4 max-w-3xl"
+        >
+          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
+            <Radio size={20} className="animate-pulse" />
+            <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
+            STATIC & SYNC
+          </h1>
+
+          <p className="text-accent-violet ui-label text-sm md:text-base italic">
+            "Static is the crushing noise of the city; Sync is the connection keeping him alive."
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="bg-surface/50 border border-white/10 p-8 rounded-2xl backdrop-blur-md max-w-2xl w-full"
+        >
+          <p className="text-text-secondary leading-relaxed">
+            In the rain-slicked sprawl of Arroyo, a reclusive diner cook finds his world
+            inextricably bound to a rogue AI in this grounded, intimate cyberpunk drama.
+          </p>
+        </motion.div>
+
+        <div className="w-full pb-4">
+          <SubscribeBadges />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.8 }}
+          className="w-full max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-10 items-stretch justify-center"
+        >
+          <div className="w-full lg:w-auto flex justify-center">
+            <VesperPlayer onTimeUpdate={setGlobalTime} />
+          </div>
+          <div className="w-full lg:flex-1 max-w-2xl mx-auto">
+            <TranscriptPane currentTime={globalTime} />
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="z-10 w-full max-w-6xl mt-20">
+        <div className="module-nav flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => setCurrentView("home")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "home" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PERSONNEL
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrentView("press")}
+            className={`
+              px-4 py-2 font-mono text-sm transition-all duration-200
+              border border-accent-cyan/30
+              ${currentView === "press" ? "bg-accent-cyan/20 text-white" : "bg-transparent text-accent-cyan/60"}
+              hover:bg-accent-cyan/10 hover:border-accent-cyan
+            `}
+          >
+            PRESS
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <ViewingPort>
+            {currentView === "home" ? <PersonnelFiles /> : <PressArchive />}
+          </ViewingPort>
+        </div>
+      </div>
+
+      <Footer onAccessPress={() => setCurrentView("press")} />
+    </main>
+  );
+}
+</file>
+
 <file path="components/Footer.tsx">
 "use client";
 
@@ -1995,15 +2203,15 @@ import {
   FaPatreon,
   FaRedditAlien,
   FaTiktok,
-  FaTwitter,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import type { IconType } from "react-icons";
 import SubscribeBadges from "@/components/SubscribeBadges";
 
 const socialLinks: { label: string; icon: IconType; href: string }[] = [
   {
-    label: "Twitter",
-    icon: FaTwitter,
+    label: "X",
+    icon: FaXTwitter,
     href: "https://twitter.com/StaticSyncPod",
   },
   {

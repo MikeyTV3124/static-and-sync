@@ -1,9 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import PersonnelGrid from "@/components/PersonnelGrid";
+import DetailView from "@/components/DetailView";
 
 export default function PersonnelFiles() {
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [viewType, setViewType] = useState<"member" | "character">("member");
+
   return (
     <section className="w-full space-y-10">
       <div className="flex items-center gap-4">
@@ -20,7 +25,20 @@ export default function PersonnelFiles() {
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7 }}
       >
-        <PersonnelGrid />
+        {selectedItem === null ? (
+          <PersonnelGrid
+            onSelect={(item, type) => {
+              setSelectedItem(item);
+              setViewType(type);
+            }}
+          />
+        ) : (
+          <DetailView
+            data={selectedItem}
+            type={viewType}
+            onBack={() => setSelectedItem(null)}
+          />
+        )}
       </motion.div>
     </section>
   );

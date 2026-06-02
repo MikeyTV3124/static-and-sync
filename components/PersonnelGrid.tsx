@@ -9,6 +9,9 @@ type ProductionMember = {
   name: string;
   role: string;
   bio: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
 };
 
 type Character = {
@@ -18,6 +21,13 @@ type Character = {
   actor: string;
   bio: string;
   audioSample: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
+};
+
+type PersonnelGridProps = {
+  onSelect: (item: ProductionMember | Character, type: "member" | "character") => void;
 };
 
 const productionTeam: ProductionMember[] = [
@@ -25,11 +35,25 @@ const productionTeam: ProductionMember[] = [
     name: "Mikey V",
     role: "Creator / Audio Engineer",
     bio: "The architect behind the soundscapes of Arroyo. Responsible for writing, directing, and the immersive audio design.",
+    imageUrl: "/MikeyProfile.png",
+    socials: [
+      { label: "Portfolio", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Mikey oversees script direction, sound design, and the final mix pipeline, building the grounded neon tone that defines Static & Sync.",
   },
   {
     name: "Zac Clemens",
     role: "Lead Voice Actor",
     bio: "The vocal chameleon bringing the sprawl to life, providing the voices for Leo, Vesper, Julian, The Owner, and the Narrator.",
+    imageUrl: "/zacclemens.png",
+    socials: [
+      { label: "Talent Reel", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Zac performs the principal cast with distinct tonal signatures per role, shaping the emotional cadence of the series across every episode.",
   },
 ];
 
@@ -101,15 +125,18 @@ function SectionToggle({
 function ProductionCard({
   member,
   icon: Icon,
+  onSelect,
 }: {
   member: ProductionMember;
   icon: LucideIcon;
+  onSelect: (member: ProductionMember) => void;
 }) {
   return (
     <motion.article
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors"
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(member)}
     >
       <Icon
         size={18}
@@ -135,16 +162,19 @@ function CharacterCard({
   character,
   isPlaying,
   onToggleAudio,
+  onSelect,
 }: {
   character: Character;
   isPlaying: boolean;
   onToggleAudio: (id: string, url: string) => void;
+  onSelect: (character: Character) => void;
 }) {
   return (
     <motion.article
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors"
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(character)}
     >
       <User
         size={18}
@@ -158,7 +188,10 @@ function CharacterCard({
             <h3 className="ui-label text-lg text-text-primary">{character.name}</h3>
             <motion.button
               type="button"
-              onClick={() => onToggleAudio(character.id, character.audioSample)}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleAudio(character.id, character.audioSample);
+              }}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.92 }}
               className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#64FFDA]/10 text-[#64FFDA] hover:bg-[#64FFDA]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
@@ -183,7 +216,7 @@ function CharacterCard({
   );
 }
 
-export default function PersonnelGrid() {
+export default function PersonnelGrid({ onSelect }: PersonnelGridProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [isCrewExpanded, setIsCrewExpanded] = useState(true);
@@ -247,6 +280,7 @@ export default function PersonnelGrid() {
                     key={member.name}
                     member={member}
                     icon={member.role.includes("Audio") ? Sliders : Mic}
+                    onSelect={(selected) => onSelect(selected, "member")}
                   />
                 ))}
               </div>
@@ -279,6 +313,7 @@ export default function PersonnelGrid() {
                     character={character}
                     isPlaying={playingId === character.id}
                     onToggleAudio={toggleAudio}
+                    onSelect={(selected) => onSelect(selected, "character")}
                   />
                 ))}
               </div>
