@@ -55,7 +55,7 @@ export default function Home() {
       {/* Intimate Glow Effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
 
-      <header className="absolute top-0 right-0 w-full p-6 flex justify-end gap-4 z-50">
+      <header className="absolute top-0 right-0 w-full p-6 flex flex-col items-end gap-2 z-50">
         {topSocialLinks.map(({ label, href, Icon }) => (
           <a
             key={label}
@@ -77,7 +77,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="space-y-4 max-w-3xl"
         >
-          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
+          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4 mt-2">
             <Radio size={20} className="animate-pulse" />
             <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
           </div>

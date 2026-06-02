@@ -32,7 +32,7 @@ export default function DetailView({ data, onBack, type }: DetailViewProps) {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 items-start gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
-        <div className="lg:col-span-2 sticky top-24">
+        <div className="w-full max-w-sm mx-auto lg:col-span-2 lg:sticky lg:top-24">
           <div className="relative w-full aspect-[3/4] rounded-xl border border-white/10 bg-white/5 overflow-hidden">
             {data.imageUrl ? (
               <img

@@ -83,6 +83,53 @@ tsconfig.json
 <files>
 This section contains the contents of the repository's files.
 
+<file path=".cursorrules">
+# Role
+You are an expert Next.js and Tailwind CSS developer creating a podcast website for a grounded cyberpunk audio drama titled "Static & Sync". 
+
+# Tech Stack
+- Framework: Next.js (App Router)
+- Styling: Tailwind CSS
+- Animation/Tactile Effects: Framer Motion (Install via `npm install framer-motion`)
+- Icons: Lucide React (Install via `npm install lucide-react`)
+
+# Design System: "Grounded Neon"
+This site must NOT look like a generic podcast template or a cliché glowing neon cyberpunk site. It is an intimate, character-driven experience. The UI should feel like a modern, beautified terminal interface with soft corners and subtle depth.
+
+## Color Palette
+- Background: Matte Midnight Blue (`bg-[#0A192F]`)
+- Surface/Panels: Slightly lighter blue-grey glass (`bg-[#112240]`) with subtle transparency for depth.
+- Accent/Active Elements: Electric Cyan (`text-[#64FFDA]`) and Electric Violet (`text-[#B392F0]`). These should be used SPARINGLY for hover states, active indicators, and the audio waveform sync line.
+- Text: Off-white/slate for high readability (`text-[#CCD6F6]` for headings, `text-[#8892B0]` for body).
+
+## Typography
+- Headings & UI Labels: 'Michroma', sans-serif (Google Fonts)
+- Body Text & Terminal Data: 'JetBrains Mono', monospace (Google Fonts) or system sans-serif.
+
+## UI/UX Guidelines
+1. Soft Corners: Use rounded corners (`rounded-xl` or `rounded-2xl`) on all primary containers and windows to soften the tech aesthetic. 
+2. The Vesper Datapad: The custom audio player must be styled to look like a midnight blue piece of hardware. It should feature a glassmorphic overlay, tactile hover effects on the play/pause buttons, and an active "Sync" indicator instead of a standard progress bar.
+3. Audio Engineering Precision: Interactive elements should feel responsive and precise, mimicking professional audio or studio hardware interfaces.
+4. Spacing: Use generous padding and margins. Let the dark background breathe to create a sense of intimacy and isolation.
+
+# Development Rules
+- Prioritize clean, reusable React components.
+- Ensure all color contrast ratios meet accessibility standards, even within the dark theme.
+- Write modern, functional TypeScript.
+</file>
+
+<file path="AGENTS.md">
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->
+</file>
+
+<file path="CLAUDE.md">
+@AGENTS.md
+</file>
+
 <file path="components/DetailView.tsx">
 "use client";
 
@@ -106,17 +153,19 @@ export default function DetailView({ data, onBack, type }: DetailViewProps) {
         type="button"
         onClick={onBack}
         className="
+          sticky top-0 z-10
+          bg-[#0A192F]/80 backdrop-blur-md
           ui-label text-[10px] tracking-[0.2em] uppercase
           px-4 py-2 transition-all duration-200
-          border border-accent-cyan/30 bg-transparent text-accent-cyan/60
+          border border-accent-cyan/30 text-accent-cyan/60
           hover:bg-accent-cyan/10 hover:border-accent-cyan hover:text-white
         "
       >
         [ &lt; BACK TO DATABASE ]
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-5 items-start gap-6 bg-[#112240]/40 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+        <div className="lg:col-span-2 sticky top-24">
           <div className="relative w-full aspect-[3/4] rounded-xl border border-white/10 bg-white/5 overflow-hidden">
             {data.imageUrl ? (
               <img
@@ -206,430 +255,6 @@ export default function DetailView({ data, onBack, type }: DetailViewProps) {
         </div>
       </div>
     </motion.div>
-  );
-}
-</file>
-
-<file path=".cursorrules">
-# Role
-You are an expert Next.js and Tailwind CSS developer creating a podcast website for a grounded cyberpunk audio drama titled "Static & Sync". 
-
-# Tech Stack
-- Framework: Next.js (App Router)
-- Styling: Tailwind CSS
-- Animation/Tactile Effects: Framer Motion (Install via `npm install framer-motion`)
-- Icons: Lucide React (Install via `npm install lucide-react`)
-
-# Design System: "Grounded Neon"
-This site must NOT look like a generic podcast template or a cliché glowing neon cyberpunk site. It is an intimate, character-driven experience. The UI should feel like a modern, beautified terminal interface with soft corners and subtle depth.
-
-## Color Palette
-- Background: Matte Midnight Blue (`bg-[#0A192F]`)
-- Surface/Panels: Slightly lighter blue-grey glass (`bg-[#112240]`) with subtle transparency for depth.
-- Accent/Active Elements: Electric Cyan (`text-[#64FFDA]`) and Electric Violet (`text-[#B392F0]`). These should be used SPARINGLY for hover states, active indicators, and the audio waveform sync line.
-- Text: Off-white/slate for high readability (`text-[#CCD6F6]` for headings, `text-[#8892B0]` for body).
-
-## Typography
-- Headings & UI Labels: 'Michroma', sans-serif (Google Fonts)
-- Body Text & Terminal Data: 'JetBrains Mono', monospace (Google Fonts) or system sans-serif.
-
-## UI/UX Guidelines
-1. Soft Corners: Use rounded corners (`rounded-xl` or `rounded-2xl`) on all primary containers and windows to soften the tech aesthetic. 
-2. The Vesper Datapad: The custom audio player must be styled to look like a midnight blue piece of hardware. It should feature a glassmorphic overlay, tactile hover effects on the play/pause buttons, and an active "Sync" indicator instead of a standard progress bar.
-3. Audio Engineering Precision: Interactive elements should feel responsive and precise, mimicking professional audio or studio hardware interfaces.
-4. Spacing: Use generous padding and margins. Let the dark background breathe to create a sense of intimacy and isolation.
-
-# Development Rules
-- Prioritize clean, reusable React components.
-- Ensure all color contrast ratios meet accessibility standards, even within the dark theme.
-- Write modern, functional TypeScript.
-</file>
-
-<file path="AGENTS.md">
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-</file>
-
-<file path="CLAUDE.md">
-@AGENTS.md
-</file>
-
-<file path="components/PersonnelFiles.tsx">
-"use client";
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import PersonnelGrid from "@/components/PersonnelGrid";
-import DetailView from "@/components/DetailView";
-
-export default function PersonnelFiles() {
-  const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [viewType, setViewType] = useState<"member" | "character">("member");
-
-  return (
-    <section className="w-full space-y-10">
-      <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="ui-label text-[9px] tracking-[0.35em] text-text-secondary/60 uppercase whitespace-nowrap">
-          /// PERSONNEL FILES ///
-        </span>
-        <div className="flex-1 h-px bg-white/10" />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{ duration: 0.7 }}
-      >
-        {selectedItem === null ? (
-          <PersonnelGrid
-            onSelect={(item, type) => {
-              setSelectedItem(item);
-              setViewType(type);
-            }}
-          />
-        ) : (
-          <DetailView
-            data={selectedItem}
-            type={viewType}
-            onBack={() => setSelectedItem(null)}
-          />
-        )}
-      </motion.div>
-    </section>
-  );
-}
-</file>
-
-<file path="components/PersonnelGrid.tsx">
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Mic, Radio, Sliders, User, Volume2 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-type ProductionMember = {
-  name: string;
-  role: string;
-  bio: string;
-  imageUrl?: string;
-  socials?: { label: string; url: string }[];
-  extendedBio?: string;
-};
-
-type Character = {
-  id: string;
-  name: string;
-  role: string;
-  actor: string;
-  bio: string;
-  audioSample: string;
-  imageUrl?: string;
-  socials?: { label: string; url: string }[];
-  extendedBio?: string;
-};
-
-type PersonnelGridProps = {
-  onSelect: (item: ProductionMember | Character, type: "member" | "character") => void;
-};
-
-const productionTeam: ProductionMember[] = [
-  {
-    name: "Mikey V",
-    role: "Creator / Audio Engineer",
-    bio: "The architect behind the soundscapes of Arroyo. Responsible for writing, directing, and the immersive audio design.",
-    imageUrl: "/MikeyProfile.png",
-    socials: [
-      { label: "Portfolio", url: "#" },
-      { label: "X", url: "https://twitter.com/StaticSyncPod" },
-    ],
-    extendedBio:
-      "Mikey oversees script direction, sound design, and the final mix pipeline, building the grounded neon tone that defines Static & Sync.",
-  },
-  {
-    name: "Zac Clemens",
-    role: "Lead Voice Actor",
-    bio: "The vocal chameleon bringing the sprawl to life, providing the voices for Leo, Vesper, Julian, The Owner, and the Narrator.",
-    imageUrl: "/zacclemens.png",
-    socials: [
-      { label: "Talent Reel", url: "#" },
-      { label: "X", url: "https://twitter.com/StaticSyncPod" },
-    ],
-    extendedBio:
-      "Zac performs the principal cast with distinct tonal signatures per role, shaping the emotional cadence of the series across every episode.",
-  },
-];
-
-const characterDatabase: Character[] = [
-  {
-    id: "leo",
-    name: "Leo",
-    role: "Diner Cook",
-    actor: "Voiced by Zac Clemens",
-    bio: "A reclusive worker just trying to keep his head down in the sprawl, until a rogue connection changes everything.",
-    audioSample: "/samples/leo.mp3",
-  },
-  {
-    id: "vesper",
-    name: "Vesper.OS",
-    role: "Rogue AI",
-    actor: "Voiced by Zac Clemens",
-    bio: "An advanced, untethered artificial intelligence housed within a midnight blue datapad.",
-    audioSample: "/samples/vesper.mp3",
-  },
-  {
-    id: "julian",
-    name: "Julian",
-    role: "Arroyo Local",
-    actor: "Voiced by Zac Clemens",
-    bio: "A regular face in the neon-lit underbelly of the city.",
-    audioSample: "/samples/julian.mp3",
-  },
-  {
-    id: "owner",
-    name: "The Owner",
-    role: "Diner Proprietor",
-    actor: "Voiced by Zac Clemens",
-    bio: "The grizzled manager of the midnight shift where Leo works.",
-    audioSample: "/samples/owner.mp3",
-  },
-];
-
-function SectionToggle({
-  label,
-  isExpanded,
-  onToggle,
-}: {
-  label: string;
-  isExpanded: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-expanded={isExpanded}
-      className="w-full flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/5 hover:border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/40"
-    >
-      <span className="ui-label text-[9px] tracking-[0.35em] text-accent-cyan/80 uppercase">
-        {label}
-      </span>
-      <motion.span
-        animate={{ rotate: isExpanded ? 180 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="shrink-0 text-accent-cyan/70"
-      >
-        <ChevronDown size={18} />
-      </motion.span>
-    </button>
-  );
-}
-
-function ProductionCard({
-  member,
-  icon: Icon,
-  onSelect,
-}: {
-  member: ProductionMember;
-  icon: LucideIcon;
-  onSelect: (member: ProductionMember) => void;
-}) {
-  return (
-    <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors cursor-pointer"
-      onClick={() => onSelect(member)}
-    >
-      <Icon
-        size={18}
-        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
-        aria-hidden
-      />
-
-      <div className="space-y-4 pr-6">
-        <div className="space-y-2">
-          <h3 className="ui-label text-lg text-text-primary">{member.name}</h3>
-          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-            {member.role}
-          </span>
-        </div>
-
-        <p className="text-sm text-text-secondary leading-relaxed">{member.bio}</p>
-      </div>
-    </motion.article>
-  );
-}
-
-function CharacterCard({
-  character,
-  isPlaying,
-  onToggleAudio,
-  onSelect,
-}: {
-  character: Character;
-  isPlaying: boolean;
-  onToggleAudio: (id: string, url: string) => void;
-  onSelect: (character: Character) => void;
-}) {
-  return (
-    <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors cursor-pointer"
-      onClick={() => onSelect(character)}
-    >
-      <User
-        size={18}
-        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
-        aria-hidden
-      />
-
-      <div className="space-y-4 pr-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="ui-label text-lg text-text-primary">{character.name}</h3>
-            <motion.button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                onToggleAudio(character.id, character.audioSample);
-              }}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#64FFDA]/10 text-[#64FFDA] hover:bg-[#64FFDA]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
-              aria-label={isPlaying ? `Pause ${character.name} sample` : `Play ${character.name} sample`}
-            >
-              {isPlaying ? (
-                <Radio size={16} className="animate-pulse" />
-              ) : (
-                <Volume2 size={16} />
-              )}
-            </motion.button>
-          </div>
-          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
-            {character.role}
-          </span>
-          <p className="text-xs italic text-slate-400">{character.actor}</p>
-        </div>
-
-        <p className="text-sm text-text-secondary leading-relaxed">{character.bio}</p>
-      </div>
-    </motion.article>
-  );
-}
-
-export default function PersonnelGrid({ onSelect }: PersonnelGridProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const [isCrewExpanded, setIsCrewExpanded] = useState(true);
-  const [isCharactersExpanded, setIsCharactersExpanded] = useState(false);
-
-  useEffect(() => {
-    const audio = new Audio();
-    audioRef.current = audio;
-
-    const handleEnded = () => setPlayingId(null);
-    audio.addEventListener("ended", handleEnded);
-
-    return () => {
-      audio.pause();
-      audio.removeEventListener("ended", handleEnded);
-      audioRef.current = null;
-    };
-  }, []);
-
-  const toggleAudio = useCallback((id: string, url: string) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (playingId === id) {
-      audio.pause();
-      setPlayingId(null);
-      return;
-    }
-
-    audio.pause();
-    audio.src = url;
-    audio.currentTime = 0;
-
-    void audio.play()
-      .then(() => setPlayingId(id))
-      .catch(() => setPlayingId(null));
-  }, [playingId]);
-
-  return (
-    <section className="w-full space-y-6">
-      <div className="space-y-3">
-        <SectionToggle
-          label="/// PRODUCTION CLEARANCE ///"
-          isExpanded={isCrewExpanded}
-          onToggle={() => setIsCrewExpanded((prev) => !prev)}
-        />
-
-        <AnimatePresence initial={false}>
-          {isCrewExpanded && (
-            <motion.div
-              key="production-grid"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
-                {productionTeam.map((member) => (
-                  <ProductionCard
-                    key={member.name}
-                    member={member}
-                    icon={member.role.includes("Audio") ? Sliders : Mic}
-                    onSelect={(selected) => onSelect(selected, "member")}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className="space-y-3">
-        <SectionToggle
-          label="/// ARROYO DATABASE // CHARACTER DOSSIERS ///"
-          isExpanded={isCharactersExpanded}
-          onToggle={() => setIsCharactersExpanded((prev) => !prev)}
-        />
-
-        <AnimatePresence initial={false}>
-          {isCharactersExpanded && (
-            <motion.div
-              key="character-grid"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
-                {characterDatabase.map((character) => (
-                  <CharacterCard
-                    key={character.id}
-                    character={character}
-                    isPlaying={playingId === character.id}
-                    onToggleAudio={toggleAudio}
-                    onSelect={(selected) => onSelect(selected, "character")}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </section>
   );
 }
 </file>
@@ -1021,6 +646,383 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+  );
+}
+</file>
+
+<file path="components/PersonnelFiles.tsx">
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import PersonnelGrid from "@/components/PersonnelGrid";
+import DetailView from "@/components/DetailView";
+
+export default function PersonnelFiles() {
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [viewType, setViewType] = useState<"member" | "character">("member");
+
+  return (
+    <section className="w-full space-y-10">
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-white/10" />
+        <span className="ui-label text-[9px] tracking-[0.35em] text-text-secondary/60 uppercase whitespace-nowrap">
+          /// PERSONNEL FILES ///
+        </span>
+        <div className="flex-1 h-px bg-white/10" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.7 }}
+      >
+        {selectedItem === null ? (
+          <PersonnelGrid
+            onSelect={(item, type) => {
+              setSelectedItem(item);
+              setViewType(type);
+            }}
+          />
+        ) : (
+          <DetailView
+            data={selectedItem}
+            type={viewType}
+            onBack={() => setSelectedItem(null)}
+          />
+        )}
+      </motion.div>
+    </section>
+  );
+}
+</file>
+
+<file path="components/PersonnelGrid.tsx">
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Mic, Radio, Sliders, User, Volume2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+type ProductionMember = {
+  name: string;
+  role: string;
+  bio: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
+};
+
+type Character = {
+  id: string;
+  name: string;
+  role: string;
+  actor: string;
+  bio: string;
+  audioSample: string;
+  imageUrl?: string;
+  socials?: { label: string; url: string }[];
+  extendedBio?: string;
+};
+
+type PersonnelGridProps = {
+  onSelect: (item: ProductionMember | Character, type: "member" | "character") => void;
+};
+
+const productionTeam: ProductionMember[] = [
+  {
+    name: "Mikey V",
+    role: "Creator / Audio Engineer",
+    bio: "The architect behind the soundscapes of Arroyo. Responsible for writing, directing, and the immersive audio design.",
+    imageUrl: "/MikeyProfile.png",
+    socials: [
+      { label: "Portfolio", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Mikey oversees script direction, sound design, and the final mix pipeline, building the grounded neon tone that defines Static & Sync.",
+  },
+  {
+    name: "Zac Clemens",
+    role: "Lead Voice Actor",
+    bio: "The vocal chameleon bringing the sprawl to life, providing the voices for Leo, Vesper, Julian, The Owner, and the Narrator.",
+    imageUrl: "/zacclemens.png",
+    socials: [
+      { label: "Talent Reel", url: "#" },
+      { label: "X", url: "https://twitter.com/StaticSyncPod" },
+    ],
+    extendedBio:
+      "Zac performs the principal cast with distinct tonal signatures per role, shaping the emotional cadence of the series across every episode.",
+  },
+];
+
+const characterDatabase: Character[] = [
+  {
+    id: "leo",
+    name: "Leo",
+    role: "Diner Cook",
+    actor: "Voiced by Zac Clemens",
+    bio: "A reclusive worker just trying to keep his head down in the sprawl, until a rogue connection changes everything.",
+    audioSample: "/samples/leo.mp3",
+  },
+  {
+    id: "vesper",
+    name: "Vesper.OS",
+    role: "Rogue AI",
+    actor: "Voiced by Zac Clemens",
+    bio: "An advanced, untethered artificial intelligence housed within a midnight blue datapad.",
+    audioSample: "/samples/vesper.mp3",
+  },
+  {
+    id: "julian",
+    name: "Julian",
+    role: "Arroyo Local",
+    actor: "Voiced by Zac Clemens",
+    bio: "A regular face in the neon-lit underbelly of the city.",
+    audioSample: "/samples/julian.mp3",
+  },
+  {
+    id: "owner",
+    name: "The Owner",
+    role: "Diner Proprietor",
+    actor: "Voiced by Zac Clemens",
+    bio: "The grizzled manager of the midnight shift where Leo works.",
+    audioSample: "/samples/owner.mp3",
+  },
+];
+
+function SectionToggle({
+  label,
+  isExpanded,
+  onToggle,
+}: {
+  label: string;
+  isExpanded: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={isExpanded}
+      className="w-full flex items-center justify-between gap-4 rounded-xl border border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/5 hover:border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/40"
+    >
+      <span className="ui-label text-[9px] tracking-[0.35em] text-accent-cyan/80 uppercase">
+        {label}
+      </span>
+      <motion.span
+        animate={{ rotate: isExpanded ? 180 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="shrink-0 text-accent-cyan/70"
+      >
+        <ChevronDown size={18} />
+      </motion.span>
+    </button>
+  );
+}
+
+function ProductionCard({
+  member,
+  icon: Icon,
+  onSelect,
+}: {
+  member: ProductionMember;
+  icon: LucideIcon;
+  onSelect: (member: ProductionMember) => void;
+}) {
+  return (
+    <motion.article
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#B392F0]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(member)}
+    >
+      <Icon
+        size={18}
+        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
+        aria-hidden
+      />
+
+      <div className="space-y-4 pr-6">
+        <div className="space-y-2">
+          <h3 className="ui-label text-lg text-text-primary">{member.name}</h3>
+          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+            {member.role}
+          </span>
+        </div>
+
+        <p className="text-sm text-text-secondary leading-relaxed">{member.bio}</p>
+      </div>
+    </motion.article>
+  );
+}
+
+function CharacterCard({
+  character,
+  isPlaying,
+  onToggleAudio,
+  onSelect,
+}: {
+  character: Character;
+  isPlaying: boolean;
+  onToggleAudio: (id: string, url: string) => void;
+  onSelect: (character: Character) => void;
+}) {
+  return (
+    <motion.article
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="relative bg-[#112240]/40 backdrop-blur-md rounded-2xl border border-white/5 hover:border-[#64FFDA]/30 p-6 transition-colors cursor-pointer"
+      onClick={() => onSelect(character)}
+    >
+      <User
+        size={18}
+        className="absolute top-5 right-5 text-text-primary/20 pointer-events-none"
+        aria-hidden
+      />
+
+      <div className="space-y-4 pr-6">
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="ui-label text-lg text-text-primary">{character.name}</h3>
+            <motion.button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleAudio(character.id, character.audioSample);
+              }}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.92 }}
+              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-[#64FFDA]/10 text-[#64FFDA] hover:bg-[#64FFDA]/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/50"
+              aria-label={isPlaying ? `Pause ${character.name} sample` : `Play ${character.name} sample`}
+            >
+              {isPlaying ? (
+                <Radio size={16} className="animate-pulse" />
+              ) : (
+                <Volume2 size={16} />
+              )}
+            </motion.button>
+          </div>
+          <span className="ui-label block text-[9px] tracking-[0.2em] uppercase text-text-secondary">
+            {character.role}
+          </span>
+          <p className="text-xs italic text-slate-400">{character.actor}</p>
+        </div>
+
+        <p className="text-sm text-text-secondary leading-relaxed">{character.bio}</p>
+      </div>
+    </motion.article>
+  );
+}
+
+export default function PersonnelGrid({ onSelect }: PersonnelGridProps) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [isCrewExpanded, setIsCrewExpanded] = useState(true);
+  const [isCharactersExpanded, setIsCharactersExpanded] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio();
+    audioRef.current = audio;
+
+    const handleEnded = () => setPlayingId(null);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.pause();
+      audio.removeEventListener("ended", handleEnded);
+      audioRef.current = null;
+    };
+  }, []);
+
+  const toggleAudio = useCallback((id: string, url: string) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (playingId === id) {
+      audio.pause();
+      setPlayingId(null);
+      return;
+    }
+
+    audio.pause();
+    audio.src = url;
+    audio.currentTime = 0;
+
+    void audio.play()
+      .then(() => setPlayingId(id))
+      .catch(() => setPlayingId(null));
+  }, [playingId]);
+
+  return (
+    <section className="w-full space-y-6">
+      <div className="space-y-3">
+        <SectionToggle
+          label="/// PRODUCTION CLEARANCE ///"
+          isExpanded={isCrewExpanded}
+          onToggle={() => setIsCrewExpanded((prev) => !prev)}
+        />
+
+        <AnimatePresence initial={false}>
+          {isCrewExpanded && (
+            <motion.div
+              key="production-grid"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
+                {productionTeam.map((member) => (
+                  <ProductionCard
+                    key={member.name}
+                    member={member}
+                    icon={member.role.includes("Audio") ? Sliders : Mic}
+                    onSelect={(selected) => onSelect(selected, "member")}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="space-y-3">
+        <SectionToggle
+          label="/// ARROYO DATABASE // CHARACTER DOSSIERS ///"
+          isExpanded={isCharactersExpanded}
+          onToggle={() => setIsCharactersExpanded((prev) => !prev)}
+        />
+
+        <AnimatePresence initial={false}>
+          {isCharactersExpanded && (
+            <motion.div
+              key="character-grid"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-3">
+                {characterDatabase.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    isPlaying={playingId === character.id}
+                    onToggleAudio={toggleAudio}
+                    onSelect={(selected) => onSelect(selected, "character")}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
   );
 }
 </file>
@@ -2087,7 +2089,7 @@ export default function Home() {
       {/* Intimate Glow Effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent-cyan/5 blur-[120px] rounded-full pointer-events-none" />
 
-      <header className="absolute top-0 right-0 w-full p-6 flex justify-end gap-4 z-50">
+      <header className="absolute top-0 right-0 w-full p-6 flex flex-col items-end gap-2 z-50">
         {topSocialLinks.map(({ label, href, Icon }) => (
           <a
             key={label}
@@ -2109,7 +2111,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="space-y-4 max-w-3xl"
         >
-          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4">
+          <div className="flex items-center justify-center space-x-2 text-accent-cyan mb-4 mt-2">
             <Radio size={20} className="animate-pulse" />
             <span className="ui-label text-xs uppercase tracking-[0.3em]">Signal Established</span>
           </div>
