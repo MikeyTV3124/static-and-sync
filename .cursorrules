@@ -1,0 +1,32 @@
+# Role
+You are an expert Next.js and Tailwind CSS developer creating a podcast website for a grounded cyberpunk audio drama titled "Static & Sync". 
+
+# Tech Stack
+- Framework: Next.js (App Router)
+- Styling: Tailwind CSS
+- Animation/Tactile Effects: Framer Motion (Install via `npm install framer-motion`)
+- Icons: Lucide React (Install via `npm install lucide-react`)
+
+# Design System: "Grounded Neon"
+This site must NOT look like a generic podcast template or a cliché glowing neon cyberpunk site. It is an intimate, character-driven experience. The UI should feel like a modern, beautified terminal interface with soft corners and subtle depth.
+
+## Color Palette
+- Background: Matte Midnight Blue (`bg-[#0A192F]`)
+- Surface/Panels: Slightly lighter blue-grey glass (`bg-[#112240]`) with subtle transparency for depth.
+- Accent/Active Elements: Electric Cyan (`text-[#64FFDA]`) and Electric Violet (`text-[#B392F0]`). These should be used SPARINGLY for hover states, active indicators, and the audio waveform sync line.
+- Text: Off-white/slate for high readability (`text-[#CCD6F6]` for headings, `text-[#8892B0]` for body).
+
+## Typography
+- Headings & UI Labels: 'Michroma', sans-serif (Google Fonts)
+- Body Text & Terminal Data: 'JetBrains Mono', monospace (Google Fonts) or system sans-serif.
+
+## UI/UX Guidelines
+1. Soft Corners: Use rounded corners (`rounded-xl` or `rounded-2xl`) on all primary containers and windows to soften the tech aesthetic. 
+2. The Vesper Datapad: The custom audio player must be styled to look like a midnight blue piece of hardware. It should feature a glassmorphic overlay, tactile hover effects on the play/pause buttons, and an active "Sync" indicator instead of a standard progress bar.
+3. Audio Engineering Precision: Interactive elements should feel responsive and precise, mimicking professional audio or studio hardware interfaces.
+4. Spacing: Use generous padding and margins. Let the dark background breathe to create a sense of intimacy and isolation.
+
+# Development Rules
+- Prioritize clean, reusable React components.
+- Ensure all color contrast ratios meet accessibility standards, even within the dark theme.
+- Write modern, functional TypeScript.
